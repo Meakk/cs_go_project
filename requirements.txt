@@ -1,0 +1,10 @@
+awpy
+matplotlib
+imageio
+pandas
+numpy
+scipy
+scikit-learn
+seaborn
+requests
+patool
