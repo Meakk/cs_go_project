@@ -84,7 +84,19 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                 json.dump(data, json_file)
             print(match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name)
             succeed += 1
-        except:
+       except:
             print("error, try next : ",r.status_code)
             os.remove('C:/demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
             os.system('clear')
+
+def read_all_csgo_match_of_one_map_json(map_wanted):
+    list_match=[]
+    for root, dirs, files in os.walk("C:/demo_csgo/DataBase/"+map_wanted):
+        for filename in files:
+            pattern = "(.*?).json"
+            filename = re.search(pattern, filename).group(1)
+            print(filename)
+            with open("C:/demo_csgo/DataBase/"+map_wanted+"/"+filename+".json") as file:
+                data=json.load(file)
+                list_match.append(data)
+    return list_match
