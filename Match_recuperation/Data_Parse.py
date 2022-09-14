@@ -97,7 +97,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                 json.dump(data, json_file)
             print(match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name)
             succeed += 1
-            if succeed == 5:
+            if succeed == 4:
                 break
        except:
             print("error, try next : ",r.status_code)
