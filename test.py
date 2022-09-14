@@ -1,6 +1,4 @@
-from Match_recuperation.Data_Parse import *
-from faceit_api.faceit_data import FaceitData
-from oppenent_analysis import *
+from oppenant_analysis.oppenent_analysis import *
 
 player_name = "memetiti"
 map_select = "de_inferno"
