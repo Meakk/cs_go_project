@@ -16,6 +16,9 @@ import zipfile
 import patoolib
 import os
 import time
+import glob
+
+
 time.sleep(2)
 
 def get_player_id(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",nickname = "memetiti"):
@@ -25,7 +28,7 @@ def get_player_id(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",nickname = "mem
 
 def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                                 player_id="57c4c556-3b8e-4695-bf55-122dde5040db", starting_item_position_call=0,
-                                return_items_call=2,nickname = "memetiti", map_select = None, premade=[]):
+                                return_items_call=2,nickname = "memetiti", map_select = None, premade=[],replace = False):
     if nickname != "memetiti":
         player_id = get_player_id(nickname = nickname)['player_id']
         print(nickname," : ",player_id)
@@ -36,6 +39,11 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
     list_of_match = []
     succeed = 0
     cpt=0
+    if replace :
+        filelist = [f for f in os.listdir('C:/demo_csgo/DataBase/' + map_select)]
+        for f in filelist:
+            os.remove(os.path.join('C:/demo_csgo/DataBase/' + map_select, f))
+        print("##ALL file removed in ", 'C:/demo_csgo/DataBase/' + map_select, "###")
     for i in range(len(all_match_player["items"])):
        cpt+=1
        try:
