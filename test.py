@@ -1,6 +1,6 @@
 from oppenant_analysis.oppenent_analysis import *
 
-player_name = "memetiti"
+player_name = "kubucza02"
 map_select = "de_inferno"
 
 match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
