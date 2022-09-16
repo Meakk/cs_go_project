@@ -1,5 +1,6 @@
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
+from adjustText import adjust_text
 
 def plot_map_list_of_game(dataframe_position,carte,text = False):
     map_bg = plt.imread("C:/demo_csgo/map_adjustement/"+carte+".PNG")
@@ -19,9 +20,9 @@ def plot_map_list_of_game(dataframe_position,carte,text = False):
     hb = ax.hexbin(x=[dataframe_position['x']],y= [dataframe_position['y']], gridsize=10,mincnt=0.01,alpha=0.5)
     ax.imshow(map_bg,zorder=0)
     if text:
-        for i in range(len(dataframe_position)):
-            plt.text(dataframe_position['x'][i], dataframe_position['y'][i], str(dataframe_position['info'][i]), fontsize=10,
-                 color="white")
+        texts = [plt.text(dataframe_position['x'][i], dataframe_position['y'][i], str(dataframe_position['info'][i]), fontsize=10,
+                 color="white") for i in range(len(dataframe_position))]
+        adjust_text(texts)
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad = 1)
     cb = fig.colorbar(hb, ax=ax, cax=cax)
