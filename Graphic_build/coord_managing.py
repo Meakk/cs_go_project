@@ -31,28 +31,29 @@ def pointy_to_resolutiony(yinput,map_of_games,resY=1024):
     except:
         print(yinput)
 
-def get_coord_dataframe(map_select,dic_list,x,y,text,info):
-    dataframe_position_final = pd.DataFrame(columns=['x', 'y'])
+def get_coord_dataframe(map_select,dic_list,x,y,dataframe_position_final):
+    for element in dic_list:
+        X = element[x]
+        Y = element[y]
+        dataframe_position_final = position_coordonate(dataframe_position_final,map_select,X,Y)
+    return dataframe_position_final
 
-    #if text:
-     #   dataframe_position_final = pd.DataFrame(columns=['x', 'y',str(info)])
+def position_coordonate(dataframe_position_final,map,x,y,information = None):
+    x_correct = pointx_to_resolutionx(x,map)
+    y_correct = pointy_to_resolutiony(y,map)
+    dataframe_position = pd.DataFrame([[x_correct,y_correct]],columns=['x','y'])
+    if information != None:
+        dataframe_position = pd.DataFrame([[x_correct, y_correct,information]], columns=['x', 'y','info'])
+    return  dataframe_position_final.append(dataframe_position).reset_index(drop=True)
+
+
+def get_coord_dataframe_with_info(map_select,dic_list,x,y,dataframe_position_final, info = None):
     for element in dic_list:
         information = []
         X = element[x]
         Y = element[y]
-        if text:
-            for i in info:
-                information.append(element[i])
-            information_str = ','.join(str(e) for e in information)
-        else:
-            information_str = None
-        dataframe_position_final = position_coordonate(dataframe_position_final,map_select,X,Y,text,information_str,info)
+        for i in info:
+            information.append(element[i])
+        information_str = ','.join(str(e) for e in information)
+        dataframe_position_final = position_coordonate(dataframe_position_final,map_select,X,Y,information_str)
     return dataframe_position_final
-
-def position_coordonate(dataframe_position_final,map,x,y,text,information,info):
-    x_correct = pointx_to_resolutionx(x,map)
-    y_correct = pointy_to_resolutiony(y,map)
-    dataframe_position = pd.DataFrame([[x_correct,y_correct]],columns=['x','y'])
-    if text:
-        dataframe_position = pd.DataFrame([[x_correct, y_correct,information]], columns=['x', 'y','info'])
-    return  dataframe_position_final.append(dataframe_position).reset_index(drop=True)

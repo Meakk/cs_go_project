@@ -13,7 +13,7 @@ def plot_map_list_of_game(dataframe_position,carte,text = False):
                         [dataframe_position['y'][5*i:5*i+5]],
                         color=color[i],
                             alpha=1,
-                            zorder=1,
+                            zorder=3,
                             cmap='hot'
                         )
     hb = ax.hexbin(x=[dataframe_position['x']],y= [dataframe_position['y']], gridsize=10,mincnt=0.01,alpha=0.5)
