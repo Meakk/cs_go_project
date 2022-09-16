@@ -2,7 +2,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
 
 def plot_map_list_of_game(dataframe_position,carte,text = False):
-    map_bg = plt.imread("C:/Users/thibault/cs_go_project/map_adjustement/"+carte+".PNG")
+    map_bg = plt.imread("C:/demo_csgo/map_adjustement/"+carte+".PNG")
     plt.figure()
     fig, ax = plt.subplots(figsize=(15, 15))
     color = ['blue','red','green','orange']
