@@ -57,4 +57,29 @@ def grenade_analysis(dic_list,map_select,x,y,text = False, info= None):
     plot_map_list_of_game(dataframe_position_final, map_select,text)
     return dataframe_position_final
 
+def fav_bomb_site_analysis(player_name, map_select,side = 't',frame = -1):
+    list_match = read_all_csgo_match_of_one_map_json(map_select)
+    bombsiteA,bombsiteB = vectorization.coordonee_bomb_site(list_match[0])
+    a=0
+    b=0
+    for num_match in range(len(list_match)):
+
+        round_t = 0
+        for i in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]['players'])):
+            if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
+                round_t = 0
+                break
+            else:
+                round_t = 15
+        for round in range(round_t,int(round_t*len(list_match[num_match]["gameRounds"])/15 + 15-round_t )):
+            bomb = [list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['x'],list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['y']]
+            distA = vectorization.distance_point(bomb, bombsiteA)
+            distB = vectorization.distance_point(bomb, bombsiteB)
+            if distA <= distB:
+                a+=1
+            if distB < distA :
+                b+=1
+    return "prob A :" + str(a/(a+b)) + ", prob B :" + str(b/(a+b))
+
+
 

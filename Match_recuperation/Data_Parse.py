@@ -18,7 +18,7 @@ import os
 import time
 import glob
 
-
+from Graphic_build import vectorization
 time.sleep(2)
 
 def get_player_id(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",nickname = "memetiti"):
