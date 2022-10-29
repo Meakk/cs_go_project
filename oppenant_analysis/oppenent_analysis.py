@@ -60,10 +60,25 @@ def grenade_analysis(dic_list,map_select,x,y,text = False, info= None):
 def fav_bomb_site_analysis(player_name, map_select,side = 't',frame = -1):
     list_match = read_all_csgo_match_of_one_map_json(map_select)
     bombsiteA,bombsiteB = vectorization.coordonee_bomb_site(list_match[0])
-    a=0
-    b=0
-    for num_match in range(len(list_match)):
 
+    round_time_before_plant_Full_Eco = []
+    round_time_before_plant_Semi_Eco = []
+    round_time_before_plant_Semi_Buy = []
+    round_time_before_plant_Full_Buy = []
+
+    Full_Eco_a = 0
+    Semi_Eco_a = 0
+    Semi_Buy_a = 0
+    Full_Buy_a = 0
+    Full_Eco_b = 0
+    Semi_Eco_b = 0
+    Semi_Buy_b = 0
+    Full_Buy_b = 0
+
+    ct_Full_Eco_a = 0
+    ct_Full_Eco_b = 0
+
+    for num_match in range(len(list_match)):
         round_t = 0
         for i in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]['players'])):
             if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
@@ -71,15 +86,100 @@ def fav_bomb_site_analysis(player_name, map_select,side = 't',frame = -1):
                 break
             else:
                 round_t = 15
-        for round in range(round_t,int(round_t*len(list_match[num_match]["gameRounds"])/15 + 15-round_t )):
-            bomb = [list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['x'],list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['y']]
+        for round in range(round_t, int(round_t * len(list_match[num_match]["gameRounds"]) / 15 + 15 - round_t)):
+            buy_type = list_match[num_match]["gameRounds"][round]['tBuyType']
+            ct_buy_type = list_match[num_match]["gameRounds"][round]['ctBuyType']
+            bomb = [list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['x'],
+                    list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['y']]
             distA = vectorization.distance_point(bomb, bombsiteA)
             distB = vectorization.distance_point(bomb, bombsiteB)
             if distA <= distB:
-                a+=1
-            if distB < distA :
-                b+=1
-    return "prob A :" + str(a/(a+b)) + ", prob B :" + str(b/(a+b))
+                if buy_type == "Full Eco":
+                    Full_Eco_a += 1
+                if buy_type == "Semi Eco":
+                    Semi_Eco_a += 1
+                if buy_type == "Semi Buy":
+                    Semi_Buy_a += 1
+                if buy_type == "Full Buy":
+                    Full_Buy_a += 1
+
+                if ct_buy_type == "Semi Eco":
+                    ct_Full_Eco_a += 1
+                if ct_buy_type == "Full Eco":
+                    ct_Full_Eco_a += 1
+
+            if distB < distA:
+                if buy_type == "Full Eco":
+                    Full_Eco_b += 1
+                if buy_type == "Semi Eco":
+                    Semi_Eco_b += 1
+                if buy_type == "Semi Buy":
+                    Semi_Buy_b += 1
+                if buy_type == "Full Buy":
+                    Full_Buy_b += 1
+
+                if ct_buy_type == "Semi Eco":
+                    ct_Full_Eco_b += 1
+                if ct_buy_type == "Full Eco":
+                    ct_Full_Eco_b += 1
+
+            # mean time round
+            if buy_type == "Full Eco":
+                round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
+                for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
+                    if i["bombAction"] == "plant":
+                        round_duration = i['seconds']
+                        break
+                round_time_before_plant_Full_Eco.append(round_duration)
+            if buy_type == "Semi Eco":
+                round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
+                for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
+                    if i["bombAction"] == "plant":
+                        round_duration = i['seconds']
+                        break
+                round_time_before_plant_Semi_Eco.append(round_duration)
+            if buy_type == "Semi Buy":
+                round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
+                for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
+                    if i["bombAction"] == "plant":
+                        round_duration = i['seconds']
+                        break
+                round_time_before_plant_Semi_Buy.append(round_duration)
+            if buy_type == "Full Buy":
+                round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
+                for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
+                    if i["bombAction"] == "plant":
+                        round_duration = i['seconds']
+                        break
+                round_time_before_plant_Full_Buy.append(round_duration)
+
+    round_time_before_plant_Full_Eco = np.array(round_time_before_plant_Full_Eco)
+    round_time_before_plant_Semi_Eco = np.array(round_time_before_plant_Semi_Eco)
+    round_time_before_plant_Semi_Buy = np.array(round_time_before_plant_Semi_Buy)
+    round_time_before_plant_Full_Buy = np.array(round_time_before_plant_Full_Buy)
+
+    print(" Full_Eco prob A :" + str(Full_Eco_a / (Full_Eco_a + Full_Eco_b)) + ", prob B :" + str(
+        Full_Eco_b / (Full_Eco_a + Full_Eco_b)))
+    print(" Full_Eco :", round_time_before_plant_Full_Eco.mean(), np.median(round_time_before_plant_Full_Eco),
+          round_time_before_plant_Full_Eco.std(), len(round_time_before_plant_Full_Eco))
+    print(" Semi_Eco prob A :" + str(Semi_Eco_a / (Semi_Eco_a + Semi_Eco_b)) + ", prob B :" + str(
+        Semi_Eco_b / (Semi_Eco_a + Semi_Eco_b)))
+    print(" Semi_Eco :", round_time_before_plant_Semi_Eco.mean(), np.median(round_time_before_plant_Semi_Eco),
+          round_time_before_plant_Semi_Eco.std(), len(round_time_before_plant_Semi_Eco))
+    print(" Semi_Buy prob A :" + str(Semi_Buy_a / (Semi_Buy_a + Semi_Buy_b)) + ", prob B :" + str(
+        Semi_Buy_b / (Semi_Buy_a + Semi_Buy_b)))
+    print(" Semi_Buy :", round_time_before_plant_Semi_Buy.mean(), np.median(round_time_before_plant_Semi_Buy),
+          round_time_before_plant_Semi_Buy.std(), len(round_time_before_plant_Semi_Buy))
+    print(" Full_Buy prob A :" + str(Full_Buy_a / (Full_Buy_a + Full_Buy_b)) + ", prob B :" + str(
+        Full_Buy_b / (Full_Buy_a + Full_Buy_b)))
+    print(" Full_Buy :", round_time_before_plant_Full_Buy.mean(), np.median(round_time_before_plant_Full_Buy),
+          round_time_before_plant_Full_Buy.std(), len(round_time_before_plant_Full_Buy))
+
+    print("CT Full_Buy prob A :" + str(ct_Full_Eco_a / (ct_Full_Eco_a + ct_Full_Eco_b)) + ", prob B :" + str(
+        ct_Full_Eco_b / (ct_Full_Eco_a + ct_Full_Eco_b)))
+
+
+
 
 
 
