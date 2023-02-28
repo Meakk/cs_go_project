@@ -10,13 +10,16 @@ import time
 time.sleep(2)
 
 def get_player_id(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",nickname = "memetiti"):
+    os.system("echo 'before api key'")
     faceit_data = FaceitData(api_key)
+    os.system("echo 'after api key'")
     player_id = faceit_data.player_details(nickname=nickname)
     return player_id
 
 def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                                 player_id="57c4c556-3b8e-4695-bf55-122dde5040db", starting_item_position_call=0,
                                 return_items_call=2,nickname = "memetiti", map_select = None, premade=[],replace = False):
+    os.system("echo 'first request'")
     if nickname != "memetiti":
         player_id = get_player_id(nickname = nickname)['player_id']
         print(nickname," : ",player_id)
@@ -29,10 +32,10 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
     succeed = 0
     cpt=0
     if replace :
-        filelist = [f for f in os.listdir('C:/demo_csgo/DataBase/' + map_select)]
+        filelist = [f for f in os.listdir('demo_csgo/DataBase/' + map_select)]
         for f in filelist:
-            os.remove(os.path.join('C:/demo_csgo/DataBase/' + map_select, f))
-        print("##ALL file removed in ", 'C:/demo_csgo/DataBase/' + map_select, "###")
+            os.remove(os.path.join('demo_csgo/DataBase/' + map_select, f))
+        print("##ALL file removed in ", 'demo_csgo/DataBase/' + map_select, "###")
     for i in range(len(all_match_player["items"])):
        cpt+=1
        try:
@@ -60,7 +63,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             print(all_match_player["items"][i]["match_id"])
             match_details = faceit_data.match_details(all_match_player["items"][i]["match_id"])
             match_name = all_match_player["items"][i]["match_id"]
-            for root, dirs, files in os.walk("C:/demo_csgo/DataBase/" + match_details["voting"]["map"]["pick"][0]):
+            for root, dirs, files in os.walk("demo_csgo/DataBase/" + match_details["voting"]["map"]["pick"][0]):
                 for filename in files:
                     print(filename," compare to : ",nickname + "_" +  match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name+'.txt')
                     if filename == nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(
@@ -78,31 +81,31 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             print(url)
             r = requests.get(url)
             #  print(r.status_code)
-            with open('C:/demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
                     match_details["configured_at"]) + '.dem.7z', 'wb') as f:
                 f.write(r.content)
-            # print('C:/demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
-            print('C:/demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            # print('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
+            print('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
                 match_details["configured_at"]) + '.dem.7z')
-            patoolib.extract_archive('C:/demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-                match_details["configured_at"]) + '.dem.7z', outdir="C:/demo_csgo/DataBase")
+            patoolib.extract_archive('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+                match_details["configured_at"]) + '.dem.7z', outdir="demo_csgo/DataBase")
             s = match_details["demo_url"][0]
             pattern = "csgo/(.*?).dem"
             match_name = re.search(pattern, s).group(1)
 
             print("debut du parse")
-            demo_parser = DemoParser(demofile='C:/demo_csgo/DataBase/' + match_name + '.dem',
+            demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_name + '.dem',
                                      demo_id=str(match_details["configured_at"]), parse_rate=128)
             data = demo_parser.parse()
             print("parse success")
 
-            os.remove('C:/demo_csgo/DataBase/' + match_name + '.dem')
-            os.remove('C:/demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            os.remove('demo_csgo/DataBase/' + match_name + '.dem')
+            os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
                 match_details["configured_at"]) + '.dem.7z')
             os.remove(str(match_details["configured_at"]) + ".json")
             match_name = all_match_player["items"][i]["match_id"]
 
-            with open('C:/demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/' + nickname + "_" +
+            with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/' + nickname + "_" +
                       match_details["voting"]["map"]["pick"][0] + "_" + str(
                     match_details["configured_at"]) + "_" + match_name + '.json', 'w') as json_file:
                 json.dump(data, json_file)
@@ -112,6 +115,6 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                 break
        except:
             print("error, try next : ",r.status_code)
-            os.remove('C:/demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
+            os.remove('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
             os.system('clear')
 

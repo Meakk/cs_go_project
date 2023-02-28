@@ -4,7 +4,7 @@ import sys
 player_name = "Memetits"
 map_select = "de_inferno"
 premade = ["Rogoj1ne","GiM6","Furiyox"]
-os.system("echo 'test' ")
+os.system("echo 'test 2' ")
 
 player_name = os.getenv("PLAYER")
 premade = os.getenv("PREMADE")

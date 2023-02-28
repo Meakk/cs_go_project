@@ -12,12 +12,12 @@ import os
 def read_all_csgo_match_of_one_map_json(map_wanted):
     list_match=[]
     print("map_wanted :",map_wanted)
-    for root, dirs, files in os.walk("C:/demo_csgo/DataBase/"+map_wanted):
+    for root, dirs, files in os.walk("demo_csgo/DataBase/"+map_wanted):
         for filename in files:
             pattern = "(.*?).json"
             filename = re.search(pattern, filename).group(1)
             print(filename)
-            with open("C:/demo_csgo/DataBase/"+map_wanted+"/"+filename+".json") as file:
+            with open("demo_csgo/DataBase/"+map_wanted+"/"+filename+".json") as file:
                 data=json.load(file)
                 list_match.append(data)
     return list_match

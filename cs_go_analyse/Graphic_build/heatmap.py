@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from adjustText import adjust_text
 
 def plot_map_list_of_game(dataframe_position,carte,text = False):
-    map_bg = plt.imread("C:/demo_csgo/map_adjustement/"+carte+".PNG")
+    map_bg = plt.imread("/demo_csgo/map_adjustement/"+carte+".PNG")
     plt.figure()
     fig, ax = plt.subplots(figsize=(15, 15))
     color = ['blue','red','green','orange']
