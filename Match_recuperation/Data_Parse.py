@@ -17,8 +17,6 @@ import patoolib
 import os
 import time
 import glob
-
-from Graphic_build import vectorization
 time.sleep(2)
 
 def get_player_id(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",nickname = "memetiti"):
@@ -32,6 +30,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
     if nickname != "memetiti":
         player_id = get_player_id(nickname = nickname)['player_id']
         print(nickname," : ",player_id)
+    os.system("echo 'start download'")
     faceit_data = FaceitData(api_key)
     all_match_player = faceit_data.player_matches(player_id=player_id, game="csgo",
                                                   starting_item_position=starting_item_position_call,
