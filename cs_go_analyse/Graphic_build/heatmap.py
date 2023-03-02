@@ -1,9 +1,11 @@
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
 from adjustText import adjust_text
+from io import BytesIO
+import base64
 
 def plot_map_list_of_game(dataframe_position,carte,text = False):
-    map_bg = plt.imread("/demo_csgo/map_adjustement/"+carte+".PNG")
+    map_bg = plt.imread("demo_csgo/map_adjustement/"+carte+".png")
     plt.figure()
     fig, ax = plt.subplots(figsize=(15, 15))
     color = ['blue','red','green','orange']
@@ -26,4 +28,7 @@ def plot_map_list_of_game(dataframe_position,carte,text = False):
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad = 1)
     cb = fig.colorbar(hb, ax=ax, cax=cax)
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    return base64.b64encode(buf.getbuffer()).decode("ascii")
 

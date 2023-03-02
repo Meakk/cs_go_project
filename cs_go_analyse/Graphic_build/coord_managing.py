@@ -1,7 +1,9 @@
 import pandas as pd
+import os
 
 def pointx_to_resolutionx(xinput,map_of_games,resX=1024):
-    df_map_adjustement = pd.read_csv ("/demo_csgo/map_adjustement/map_data.csv")
+    print("WOKRDIR : ",os.getcwd())
+    df_map_adjustement = pd.read_csv("demo_csgo/map_adjustement/map_data.csv")
     startX=df_map_adjustement[df_map_adjustement["map"]==map_of_games]["StartX"].values
     endX=df_map_adjustement[df_map_adjustement["map"]==map_of_games]["EndX"].values
     try:
@@ -16,7 +18,7 @@ def pointx_to_resolutionx(xinput,map_of_games,resX=1024):
         print(xinput)
 
 def pointy_to_resolutiony(yinput,map_of_games,resY=1024):
-    df_map_adjustement = pd.read_csv ("/demo_csgo/map_adjustement/map_data.csv")
+    df_map_adjustement = pd.read_csv("demo_csgo/map_adjustement/map_data.csv")
     startY=df_map_adjustement[df_map_adjustement["map"]==map_of_games]["StartY"].values
     endY=df_map_adjustement[df_map_adjustement["map"]==map_of_games]["EndY"].values
     try:

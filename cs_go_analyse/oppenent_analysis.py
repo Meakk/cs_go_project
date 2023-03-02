@@ -67,10 +67,10 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',frame = 7):
     else:
         SIDE = 'CT'
     dataframe_grenade = dataframe_grenade[pd.Series([(","+SIDE in e) for e in dataframe_grenade['info']])].reset_index(drop=True)
-    plot_map_list_of_game(dataframe_position_final, map_select,text = True)
-    plot_map_list_of_game(dataframe_grenade, map_select, text = True)
+    data_player = plot_map_list_of_game(dataframe_position_final, map_select,text = True)
+    data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True)
 
-    return prob_place
+    return prob_place,data_player,data_grenade
 
 def grenade_analysis(dic_list,map_select,x,y,text = False, info= None):
     dataframe_position_final = get_coord_dataframe(map_select,dic_list, x, y,text,info)
@@ -197,6 +197,8 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
 
     print("CT Full_Buy prob A :" + str(ct_Full_Eco_a / (ct_Full_Eco_a + ct_Full_Eco_b)) + ", prob B :" + str(
         ct_Full_Eco_b / (ct_Full_Eco_a + ct_Full_Eco_b)))
+    return " Full_Eco prob A :" + str(Full_Eco_a / (Full_Eco_a + Full_Eco_b)) + ", prob B :" + str(
+        Full_Eco_b / (Full_Eco_a + Full_Eco_b))
 
 
 
