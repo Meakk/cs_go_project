@@ -5,6 +5,7 @@ from .faceit_api.faceit_data import FaceitData
 import requests
 import re
 import patoolib
+import multiprocessing
 
 import time
 time.sleep(2)
@@ -63,58 +64,73 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             print(all_match_player["items"][i]["match_id"])
             match_details = faceit_data.match_details(all_match_player["items"][i]["match_id"])
             match_name = all_match_player["items"][i]["match_id"]
+            succeed = 0
             for root, dirs, files in os.walk("demo_csgo/DataBase/" + match_details["voting"]["map"]["pick"][0]):
                 for filename in files:
+                    succeed += 1
                     print(filename," compare to : ",nickname + "_" +  match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name+'.txt')
                     if filename == nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(
                             match_details["configured_at"]) + "_" + match_name + '.json':
                         verif = 1
                         break
+            if succeed >= 4:
+                break
             if verif == 1:
                 print("demo déjà présente, on passe à la suite")
                 continue
+            
             url = match_details["demo_url"][0]
             headers = {
                 'accept': 'application/json',
                 'Authorization': 'Bearer {}'.format(api_key)
             }
-            print(url)
-            r = requests.get(url)
-            #  print(r.status_code)
-            with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-                    match_details["configured_at"]) + '.dem.7z', 'wb') as f:
-                f.write(r.content)
-            # print('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
-            print('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-                match_details["configured_at"]) + '.dem.7z')
-            patoolib.extract_archive('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-                match_details["configured_at"]) + '.dem.7z', outdir="demo_csgo/DataBase")
-            s = match_details["demo_url"][0]
-            pattern = "csgo/(.*?).dem"
-            match_name = re.search(pattern, s).group(1)
-
-            print("debut du parse")
-            demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_name + '.dem',
-                                     demo_id=str(match_details["configured_at"]), parse_rate=128)
-            data = demo_parser.parse()
-            print("parse success")
-
-            os.remove('demo_csgo/DataBase/' + match_name + '.dem')
-            os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-                match_details["configured_at"]) + '.dem.7z')
-            os.remove(str(match_details["configured_at"]) + ".json")
-            match_name = all_match_player["items"][i]["match_id"]
-
-            with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/' + nickname + "_" +
-                      match_details["voting"]["map"]["pick"][0] + "_" + str(
-                    match_details["configured_at"]) + "_" + match_name + '.json', 'w') as json_file:
-                json.dump(data, json_file)
-            print(match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name)
-            succeed += 1
-            if succeed == 4:
-                break
+            proc1 = multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname ))
+            proc1.start()
+  
        except:
-            print("error, try next : ",r.status_code)
-            os.remove('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
-            os.system('clear')
+            print("error before download and parse")
+
+
+            
+            
+            
+def download_parse(url,match_details,all_match_player,nickname):
+    try:
+        print(url)
+        r = requests.get(url)
+        #  print(r.status_code)
+        with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+                match_details["configured_at"]) + '.dem.7z', 'wb') as f:
+            f.write(r.content)
+        # print('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
+        print('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem.7z')
+        patoolib.extract_archive('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem.7z', outdir="demo_csgo/DataBase")
+        s = match_details["demo_url"][0]
+        pattern = "csgo/(.*?).dem"
+        match_name = re.search(pattern, s).group(1)
+
+        print("debut du parse")
+        demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_name + '.dem',
+                                    demo_id=str(match_details["configured_at"]), parse_rate=128)
+        data = demo_parser.parse()
+        print("parse success")
+
+        os.remove('demo_csgo/DataBase/' + match_name + '.dem')
+        os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem.7z')
+        os.remove(str(match_details["configured_at"]) + ".json")
+        match_name = all_match_player["items"][i]["match_id"]
+
+        with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/' + nickname + "_" +
+                    match_details["voting"]["map"]["pick"][0] + "_" + str(
+                match_details["configured_at"]) + "_" + match_name + '.json', 'w') as json_file:
+            json.dump(data, json_file)
+        print(match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name)
+        
+    except:
+        print("error, try next : ",r.status_code)
+        os.remove('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
+        os.system('clear')
 
