@@ -23,6 +23,7 @@ def read_all_csgo_match_of_one_map_json(map_wanted):
     return list_match
 
 def gunround_analysis(player_name, map_select,list_match, side = 't',frame = 7):
+    print("test")
     dataframe_position_final = pd.DataFrame(columns=['x', 'y'])
     dataframe_grenade = pd.DataFrame(columns=['x', 'y', "info"])
    #list_match = read_all_csgo_match_of_one_map_json(map_select)
@@ -67,8 +68,12 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',frame = 7):
     else:
         SIDE = 'CT'
     dataframe_grenade = dataframe_grenade[pd.Series([(","+SIDE in e) for e in dataframe_grenade['info']])].reset_index(drop=True)
+    print(dataframe_grenade)
     data_player = plot_map_list_of_game(dataframe_position_final, map_select,text = True)
-    data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True)
+    print("test",dataframe_grenade.empty)
+    print(not dataframe_grenade.empty)
+    if not dataframe_grenade.empty:
+        data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True)
 
    # return prob_place,data_player,data_grenade
 

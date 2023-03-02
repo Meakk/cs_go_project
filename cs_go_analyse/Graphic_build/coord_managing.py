@@ -2,7 +2,6 @@ import pandas as pd
 import os
 
 def pointx_to_resolutionx(xinput,map_of_games,resX=1024):
-    print("WOKRDIR : ",os.getcwd())
     df_map_adjustement = pd.read_csv("demo_csgo/map_adjustement/map_data.csv")
     startX=df_map_adjustement[df_map_adjustement["map"]==map_of_games]["StartX"].values
     endX=df_map_adjustement[df_map_adjustement["map"]==map_of_games]["EndX"].values
