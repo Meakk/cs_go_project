@@ -19,7 +19,7 @@ print(data_player_t)
 def hello():
     
     #df = gunround_analysis(player_name,map_select,list_match,side = 'ct',frame = 7)
-    return f"<h3>Analyse du joueur Memetiti!</h3>" \
+    return f"<h3>Analyse du joueur GiM6!</h3>" \
     f"<b>Map analyser:</b> {map_select}<br/>" \
     f"<b>Style de jeu:</b> {Team_info} <br/>" \
     f"<img src='data:image/png;base64,{data_player_t}'/>"\
