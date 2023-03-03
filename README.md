@@ -61,5 +61,8 @@
 </ul>
 
 ![plot](C:/Users/tlejoux/Downloads/position.png)
-  
+ 
+ <h2>Thanks</h2>
+   <p>Thanks to the other github that I used for this project : https://github.com/pnxenopoulos/awpy from <strong>pnxenopoulos</strong> to parse the data and convert the dem file to json.<p>
+   <p>Thanks to the faceit API<p>
 share container with host file : docker run -it --rm -v ${pwd}/demo_csgo:/demo_csgo busybox sh
