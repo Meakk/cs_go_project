@@ -27,8 +27,9 @@
   <li>Analyzed general style of gameplay and some insights. For exemple : Usual start positionement for pistol round (1 row = 1 match and the probability column tell us the % of times they used this start), rapidity of their gameplay during the Terrorist side (mean, meadian, std, number of data) and bombsite preference in % during the Terrorist side</li>
   
   ![positonnement](https://user-images.githubusercontent.com/66355122/222741706-a835322b-c28a-4c45-bcc3-fd097dc9cb77.png)
+  
+![data](https://user-images.githubusercontent.com/66355122/222755832-02debfc2-b3f6-4975-8670-04a13bbbe75a.png)
 
-![Annotation 2023-03-03 145456](https://user-images.githubusercontent.com/66355122/222739770-6aae0249-9b1a-407c-8c18-ea471ffab2fc.png)
 
   <li>Visualized the opponent's strategy for both pistol rounds (Counter-terrorist and terrorist). One color = one match.</li>
   
