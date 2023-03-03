@@ -25,7 +25,8 @@
   <li>Managed the directory of the database.</li>
   <li>Transformed the data to create new information and use it to find new insights.</li>
   <li>Analyzed general style of gameplay and some insights.</li>
-  <li>Visualized the opponent's strategy for both pistol rounds (Counter-terrorist and terrorist).</li>
+  <li>Visualized the opponent's strategy for both pistol rounds (Counter-terrorist and terrorist).
+<img src=C:/Users/tlejoux/Downloads/position.png></li>
   <li>Created a small front-end with a Flask application to visualize the data analysis.</li>
 </ul>
 
@@ -47,5 +48,5 @@
   <li>Optimize data visualization with, for example, video graph showing their usual pistol, etc.</li>
 </ul>
 
-    
+  
 share container with host file : docker run -it --rm -v ${pwd}/demo_csgo:/demo_csgo busybox sh
