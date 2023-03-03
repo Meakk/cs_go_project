@@ -1,7 +1,7 @@
-<h1># cs_go_project</h1>
+<h1>cs_go_project</h1>
 
 <h2>Context</h2>
-
+<img src=https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRhL-0BS-8I-UMKqUWSYJKuuMJ4_oB6uDL9Wyv6yQ&s>
 <p>Counter-Strike: Global Offensive (CS:GO) is a popular multiplayer first-person shooter video game developed by Valve Corporation. In the game, players join either the Terrorist or Counter-Terrorist team and must complete objectives or eliminate the enemy team. It has a competitive mode where players can compete against each other in ranked matches.</p>
 
 <p>FACEIT is a third-party online platform that provides competitive matchmaking and leagues for Counter-Strike: Global Offensive players. It offers players an opportunity to compete in high-level matches, tournaments, and leagues with rankings and rewards. Additionally, FACEIT also has an anti-cheat system to ensure fair play.</p>
