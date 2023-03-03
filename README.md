@@ -8,7 +8,7 @@
 
 <h2>Purpose of this project</h2>
 
-<p>When Faceit finds you a match/lobby, you have 5 minutes to go on the server and play. The purpose of this project is to be able to automatically download the previous matches of your opponent and automatically analyze them to know recurrent strategy and their style of gameplay to counter them. Isn't it Counter-Strike?</p>
+<p>When Faceit finds you a match/lobby, you have 5 minutes to go on the server and play. The purpose of this project is to be able to automatically download the previous matches of your opponent and automatically analyze them to know recurrent strategy and their style of gameplay to counter them in less than 5 minutes, before the game start. Isn't it Counter-Strike?</p>
 
 <h2>How it works</h2>
 
