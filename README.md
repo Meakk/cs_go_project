@@ -46,7 +46,7 @@
 
 <ul>
   <li>Create a small front with Flask to see match analysis on it -> DONE</li>
-  <li>Containerize the app -> DONE </li>
+  <li>Containerize the app -> Got problem to connect the app to internet in order to download the matches. See if I have to use a proxy. </li>
   <li>Containerize the match analysis (share volume between host and container for database) -> DONE</li>
   <li>Use multiprocessing in Python to optimize the download, the analysis.</li>
   <li>Replace JSON file analysis with Python to PySpark to use parallelization and multiprocessing.</li>
