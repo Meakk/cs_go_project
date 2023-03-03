@@ -180,31 +180,17 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
     round_time_before_plant_Semi_Eco = np.array(round_time_before_plant_Semi_Eco)
     round_time_before_plant_Semi_Buy = np.array(round_time_before_plant_Semi_Buy)
     round_time_before_plant_Full_Buy = np.array(round_time_before_plant_Full_Buy)
-
-    print(" Full_Eco prob go A :" + str(Full_Eco_a / (Full_Eco_a + Full_Eco_b)) + ", prob go B :" + str(
-        Full_Eco_b / (Full_Eco_a + Full_Eco_b)))
-    print(" Full_Eco mean/ med/ std round second spent before plant:", round_time_before_plant_Full_Eco.mean(), np.median(round_time_before_plant_Full_Eco),
-          round_time_before_plant_Full_Eco.std(), len(round_time_before_plant_Full_Eco))
-    print(" Semi_Eco prob go A :" + str(Semi_Eco_a / (Semi_Eco_a + Semi_Eco_b)) + ", prob go B :" + str(
-        Semi_Eco_b / (Semi_Eco_a + Semi_Eco_b)))
-    print(" Semi_Eco mean/ med/ std round second spent before plant:", round_time_before_plant_Semi_Eco.mean(), np.median(round_time_before_plant_Semi_Eco),
-          round_time_before_plant_Semi_Eco.std(), len(round_time_before_plant_Semi_Eco))
-    print(" Semi_Buy prob go A :" + str(Semi_Buy_a / (Semi_Buy_a + Semi_Buy_b)) + ", prob go B :" + str(
-        Semi_Buy_b / (Semi_Buy_a + Semi_Buy_b)))
-    print(" Semi_Buy mean/ med/ std round second spent before plant:", round_time_before_plant_Semi_Buy.mean(), np.median(round_time_before_plant_Semi_Buy),
-          round_time_before_plant_Semi_Buy.std(), len(round_time_before_plant_Semi_Buy))
-    print(" Full_Buy prob go A :" + str(Full_Buy_a / (Full_Buy_a + Full_Buy_b)) + ", prob go B :" + str(
-        Full_Buy_b / (Full_Buy_a + Full_Buy_b)))
-    print(" Full_Buy mean/ med/ std round second spent before plant:", round_time_before_plant_Full_Buy.mean(), np.median(round_time_before_plant_Full_Buy),
-          round_time_before_plant_Full_Buy.std(), len(round_time_before_plant_Full_Buy))
-
-    print("CT Full_eco prob go A :" + str(ct_Full_Eco_a / (ct_Full_Eco_a + ct_Full_Eco_b)) + ", prob go B :" + str(
-        ct_Full_Eco_b / (ct_Full_Eco_a + ct_Full_Eco_b)))
-    return " Full_Eco prob go A :" + str(Full_Eco_a / (Full_Eco_a + Full_Eco_b)) + ", prob go B :" + str(
-        Full_Eco_b / (Full_Eco_a + Full_Eco_b))
-
-
-
-
-
-
+    
+    data = pd.DataFrame(index= ["Full_eco_T","Semi_eco_T","Semi_buy_T","Full_buy_T","CT_in_Eco"],
+                        columns = ["prob_go_A","prob_go_B","Mean_Sec_Round_before_plant(s)","Med_Sec_Round_before_plant(s)"
+                                   ,"std_Sec_Round_before_plant","nb_sample"],
+                        data = ([[Full_Eco_a / (Full_Eco_a + Full_Eco_b),Full_Eco_b / (Full_Eco_a + Full_Eco_b),round_time_before_plant_Full_Eco.mean(),np.median(round_time_before_plant_Full_Eco),
+          round_time_before_plant_Full_Eco.std(), len(round_time_before_plant_Full_Eco)],
+                                         [Semi_Eco_a / (Semi_Eco_a + Semi_Eco_b), Semi_Eco_b / (Semi_Eco_a + Semi_Eco_b), round_time_before_plant_Semi_Eco.mean(), np.median(round_time_before_plant_Semi_Eco),
+          round_time_before_plant_Semi_Eco.std(), len(round_time_before_plant_Semi_Eco)],
+                                         [Semi_Buy_a / (Semi_Buy_a + Semi_Buy_b),Semi_Buy_b / (Semi_Buy_a + Semi_Buy_b), round_time_before_plant_Semi_Buy.mean(), np.median(round_time_before_plant_Semi_Buy),
+          round_time_before_plant_Semi_Buy.std(), len(round_time_before_plant_Semi_Buy)],
+                                         [Full_Buy_a / (Full_Buy_a + Full_Buy_b),Full_Buy_b / (Full_Buy_a + Full_Buy_b),round_time_before_plant_Full_Buy.mean(), np.median(round_time_before_plant_Full_Buy),
+          round_time_before_plant_Full_Buy.std(), len(round_time_before_plant_Full_Buy)],
+                                         [ct_Full_Eco_a / (ct_Full_Eco_a + ct_Full_Eco_b),ct_Full_Eco_b / (ct_Full_Eco_a + ct_Full_Eco_b)]]))
+    return data
