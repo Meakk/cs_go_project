@@ -16,6 +16,11 @@
   <li><strong>demo_csgo:</strong> This is the database of this application. This is where all the downloads, extraction, and parsing occur.</li>
   <li><strong>cs_go_analyse:</strong> This folder is where all the data analysis and data transformation occur.</li>
   <li><strong>download_matches:</strong> This folder contains all the application that will manage demo_csgo database.</li>
+  <li><strong>Faceit API:</strong> Use to find and download matches.</li>
+  <li><strong>awpy:</strong> Use to convert dem file downloaded to json file or csv dataframe. This will be our base for data analysis. Here an exemple of what the data look like : </li>
+  
+![data_show](https://user-images.githubusercontent.com/66355122/222761345-6e5db062-cc57-46ba-818a-39f9e4231e80.png)
+
 </ul>
 
 <h3>Done:</h3>
