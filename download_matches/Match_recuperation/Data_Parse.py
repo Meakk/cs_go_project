@@ -73,7 +73,8 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                             match_details["configured_at"]) + "_" + match_name + '.json':
                         verif = 1
                         break
-            if succeed >= 4:
+            print("nb_game_json:", succeed)
+            if succeed >= 5:
                 break
             if verif == 1:
                 print("demo déjà présente, on passe à la suite")
@@ -84,7 +85,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                 'accept': 'application/json',
                 'Authorization': 'Bearer {}'.format(api_key)
             }
-            proc1 = multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname ))
+            proc1 = multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname,i ))
             proc1.start()
   
        except:
@@ -94,7 +95,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             
             
             
-def download_parse(url,match_details,all_match_player,nickname):
+def download_parse(url,match_details,all_match_player,nickname,i):
     try:
         print(url)
         r = requests.get(url)
@@ -111,13 +112,16 @@ def download_parse(url,match_details,all_match_player,nickname):
         pattern = "csgo/(.*?).dem"
         match_name = re.search(pattern, s).group(1)
 
-        print("debut du parse")
-        demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_name + '.dem',
+        print("debut du parse",'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem')
+        demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem',
                                     demo_id=str(match_details["configured_at"]), parse_rate=128)
         data = demo_parser.parse()
         print("parse success")
 
-        os.remove('demo_csgo/DataBase/' + match_name + '.dem')
+        os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem')
         os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem.7z')
         os.remove(str(match_details["configured_at"]) + ".json")
