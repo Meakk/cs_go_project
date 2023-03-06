@@ -30,6 +30,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                                                   starting_item_position=starting_item_position_call,
                                                   return_items=return_items_call)
     list_of_match = []
+    proc = []
     succeed = 0
     cpt=0
     if replace :
@@ -86,9 +87,8 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
                 'accept': 'application/json',
                 'Authorization': 'Bearer {}'.format(api_key)
             }
-            proc1 = multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname,i ))
-            proc1.start()
             
+            proc.append(multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname,i )))
             succeed += 1
             if succeed >= 4:
                 print("Enough matches downloaded")
@@ -96,6 +96,12 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
   
        except:
             print("error before download and parse")
+    for proc1 in proc :
+        proc1.start()
+    print("En attente de FIN download and parse")
+    for proc1 in proc :
+        proc1.join()
+    print("DONE Doawnloading and parsing")
 
 
             
