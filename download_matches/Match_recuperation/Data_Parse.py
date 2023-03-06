@@ -64,21 +64,22 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             print(all_match_player["items"][i]["match_id"])
             match_details = faceit_data.match_details(all_match_player["items"][i]["match_id"])
             match_name = all_match_player["items"][i]["match_id"]
-            succeed = 0
+            
             for root, dirs, files in os.walk("demo_csgo/DataBase/" + match_details["voting"]["map"]["pick"][0]):
                 for filename in files:
-                    succeed += 1
+                    
                     print(filename," compare to : ",nickname + "_" +  match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name+'.txt')
                     if filename == nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(
                             match_details["configured_at"]) + "_" + match_name + '.json':
                         verif = 1
                         break
             print("nb_game_json:", succeed)
-            if succeed >= 5:
-                break
+            
             if verif == 1:
                 print("demo déjà présente, on passe à la suite")
                 continue
+            
+            
             
             url = match_details["demo_url"][0]
             headers = {
@@ -87,6 +88,11 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             }
             proc1 = multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname,i ))
             proc1.start()
+            
+            succeed += 1
+            if succeed >= 4:
+                print("Enough matches downloaded")
+                break
   
        except:
             print("error before download and parse")
@@ -114,9 +120,10 @@ def download_parse(url,match_details,all_match_player,nickname,i):
 
         print("debut du parse",'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem')
-        demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-            match_details["configured_at"]) + '.dem',
-                                    demo_id=str(match_details["configured_at"]), parse_rate=128)
+        demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + '.dem',
+                                demo_id=nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + "_" + match_name,
+                                parse_rate=128, 
+                                outpath = 'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/')
         data = demo_parser.parse()
         print("parse success")
 
@@ -124,13 +131,13 @@ def download_parse(url,match_details,all_match_player,nickname,i):
             match_details["configured_at"]) + '.dem')
         os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem.7z')
-        os.remove(str(match_details["configured_at"]) + ".json")
-        match_name = all_match_player["items"][i]["match_id"]
+    #    os.remove(str(match_details["configured_at"]) + ".json")
+    #    match_name = all_match_player["items"][i]["match_id"]
 
-        with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/' + nickname + "_" +
-                    match_details["voting"]["map"]["pick"][0] + "_" + str(
-                match_details["configured_at"]) + "_" + match_name + '.json', 'w') as json_file:
-            json.dump(data, json_file)
+     #   with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/' + nickname + "_" +
+     #               match_details["voting"]["map"]["pick"][0] + "_" + str(
+       #         match_details["configured_at"]) + "_" + match_name + '.json', 'w') as json_file:
+       #     json.dump(data, json_file)
         print(match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name)
         
     except:

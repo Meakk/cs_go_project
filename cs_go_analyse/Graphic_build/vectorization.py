@@ -1,17 +1,18 @@
 import math
 
 def coordonee_bomb_site(data):
-    cpt=0
+    check_a = 0
+    check_b = 0
     for r in range(len(data["gameRounds"])):
         try:
             for player in data["gameRounds"][r]["frames"][-1]['ct']['players']:
                 if player["lastPlaceName"]=="BombsiteB":
                     coor_B= [player['x'],player['y']]
-                    cpt+=1
+                    check_a=1
                 if player["lastPlaceName"] == "BombsiteA":
                     coor_A = [player['x'], player['y']]
-                    cpt+=1
-                if cpt == 2:
+                    check_b=1
+                if ((check_a == 1) & (check_b==1)):
                     break
         except:
             print("error coordonee_bomb_site")
