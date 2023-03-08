@@ -108,7 +108,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             
             
 def download_parse(url,match_details,all_match_player,nickname,i):
-    try:
+  #  try:
         print(url)
         r = requests.get(url)
         #  print(r.status_code)
@@ -146,8 +146,8 @@ def download_parse(url,match_details,all_match_player,nickname,i):
        #     json.dump(data, json_file)
         print(match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+"_"+match_name)
         
-    except:
-        print("error, try next : ",r.status_code)
-        os.remove('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
-        os.system('clear')
+  #  except:
+   #     print("error, try next : ",r.status_code)
+   #     os.remove('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
+    #    os.system('clear')
 

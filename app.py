@@ -11,10 +11,9 @@ player_name = "Memetits"
 map_select = "de_inferno"
 
 list_match = read_all_csgo_match_of_one_map_json(map_select)
-df,data_player_t,data_grenade_t = gunround_analysis(player_name,map_select,list_match,side = 't')
+df,data_player_t = gunround_analysis(player_name,map_select,list_match,side = 't')
 #df,data_player_ct,data_grenade_ct = gunround_analysis(player_name,map_select,list_match,side = 'ct')
 Team_info = fav_bomb_site_analysis(player_name,list_match,map_select)
-print(data_player_t)
 @app.route("/")
 def hello():
     
@@ -22,8 +21,7 @@ def hello():
     return f"<h3>Analyse du joueur GiM6!</h3>" \
     f"<b>Map analyser:</b> {map_select}<br/>" \
     f"<b>Style de jeu:</b> {Team_info} <br/>" \
-    f"<img src='data:image/png;base64,{data_player_t}'/>"\
-    f"<img src='data:image/png;base64,{data_grenade_t}'/>"\
+    f"<img src='data:image/png;base64,{data_player_t}'/>"
     #f"<img src='data:image/png;base64,{data_player_ct}'/>"\
     #f"<img src='data:image/png;base64,{data_grenade_ct}'/>"\
     #f"<p>More info à venir</p>"

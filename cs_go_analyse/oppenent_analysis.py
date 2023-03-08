@@ -95,7 +95,7 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',frame = 7):
    # if not dataframe_grenade.empty:
      #   data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True,nb_games = len(list_match))
 
-    return prob_place
+    return prob_place,data_player
 
 def grenade_analysis(dic_list,map_select,x,y,text = False, info= None):
     dataframe_position_final = get_coord_dataframe(map_select,dic_list, x, y,text,info)
