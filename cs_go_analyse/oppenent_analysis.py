@@ -26,7 +26,7 @@ def read_all_csgo_match_of_one_map_json(map_wanted):
 def gunround_analysis(player_name, map_select,list_match, side = 't',start_frame = 7):
     gif_frames = []
     print("test")
-    for frame in range(start_frame,start_frame + 7, 1) :
+    for frame in range(start_frame,start_frame+1 , 1) :
         dataframe_position_final = pd.DataFrame(columns=['x', 'y'])
         dataframe_grenade = pd.DataFrame(columns=['x', 'y', "info"])
         bombsite = []
@@ -267,8 +267,14 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
     prob_place = pd.DataFrame()
     cpt = 0
     list_cpt = []
+    cpt2 = 0
+    match_id = []
     for num_match in range(len(list_match)):
+        
         round = 0
+        cpt2+=1
+        if ((cpt2== 5)&(buy_type=="Full Buy")) :
+            break
         for i in range(len(list_match[num_match]["gameRounds"][round]["frames"][frame][side]['players'])):
             if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
                 round = 0
@@ -291,11 +297,13 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
                 for i in range(5):
                     bombsite.append('A')
                     list_cpt.append(cpt)
+                    match_id.append(cpt2)
                 cpt += 1
             else :
                 for i in range(5):
                     bombsite.append('B')
                     list_cpt.append(cpt)
+                    match_id.append(cpt2)
                 cpt += 1
                 
             place = pd.DataFrame(index=['position_match' + str(num_match)])
@@ -328,7 +336,7 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
         SIDE = 'CT'
     dataframe_grenade = dataframe_grenade[pd.Series([(","+SIDE in e) for e in dataframe_grenade['info']])].reset_index(drop=True)
     dataframe_position_final['Bombsite'] = bombsite
-    dataframe_position_final['Match_ID'] = list_cpt
+    dataframe_position_final['Match_ID'] = match_id
     dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
     dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
     print("FRAMES:",frame)
