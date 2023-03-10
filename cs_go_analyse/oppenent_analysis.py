@@ -7,6 +7,7 @@ import json
 import re
 import numpy as np
 import os
+import imageio
 
 
 def read_all_csgo_match_of_one_map_json(map_wanted):
@@ -22,78 +23,89 @@ def read_all_csgo_match_of_one_map_json(map_wanted):
                 list_match.append(data)
     return list_match
 
-def gunround_analysis(player_name, map_select,list_match, side = 't',frame = 7):
+def gunround_analysis(player_name, map_select,list_match, side = 't',start_frame = 7):
+    gif_frames = []
     print("test")
-    dataframe_position_final = pd.DataFrame(columns=['x', 'y'])
-    dataframe_grenade = pd.DataFrame(columns=['x', 'y', "info"])
-    bombsite = []
-   #list_match = read_all_csgo_match_of_one_map_json(map_select)
-    kit = 0
-    prob_place = pd.DataFrame()
-    cpt = 0
-    list_cpt = []
-    for num_match in range(len(list_match)):
+    for frame in range(start_frame,start_frame+1 , 1) :
+        dataframe_position_final = pd.DataFrame(columns=['x', 'y'])
+        dataframe_grenade = pd.DataFrame(columns=['x', 'y', "info"])
+        bombsite = []
+    #list_match = read_all_csgo_match_of_one_map_json(map_select)
+        kit = 0
+        prob_place = pd.DataFrame()
+        cpt = 0
+        list_cpt = []
+        for num_match in range(len(list_match)):
 
-        round_t = 0
-        for i in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]['players'])):
-            if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
-                round_t = 0
-                break
-            else:
-                round_t = 15
+            round_t = 0
+            for i in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]['players'])):
+                if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
+                    round_t = 0
+                    break
+                else:
+                    round_t = 15
+                    
+            bombsiteA,bombsiteB = coordonee_bomb_site(list_match[0])
+            bomb = [list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['x'],
+                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y']]
+            distA = distance_point(bomb, bombsiteA)
+            distB = distance_point(bomb, bombsiteB)
+            if distA <= distB:
+                for i in range(5):
+                    bombsite.append('A')
+                    list_cpt.append(cpt)
+                cpt += 1
+            else :
+                for i in range(5):
+                    bombsite.append('B')
+                    list_cpt.append(cpt)
+                cpt += 1
                 
-        bombsiteA,bombsiteB = coordonee_bomb_site(list_match[0])
-        bomb = [list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['x'],
-                    list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y']]
-        distA = distance_point(bomb, bombsiteA)
-        distB = distance_point(bomb, bombsiteB)
-        if distA <= distB:
-            for i in range(5):
-                bombsite.append('A')
-                list_cpt.append(cpt)
-            cpt += 1
-        else :
-            for i in range(5):
-                bombsite.append('B')
-                list_cpt.append(cpt)
-            cpt += 1
-            
-        place = pd.DataFrame(index=['position_match' + str(num_match)])
-        for player_id in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]) - 1):
-            try:
-                place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
-                    'lastPlaceName']] += 1
-                if (side == "ct") & (list_match[num_match]["gameRounds"][round_t]["frames"][frame]["ct"]["players"][player_id]['hasDefuse']) & (kit<=num_match):
-                    kit += 1
-            except:
-                place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
-                    'lastPlaceName']] = 1
-                if (side == "ct") & (list_match[num_match]["gameRounds"][round_t]["frames"][frame]["ct"]["players"][player_id]['hasDefuse'])& (kit<=num_match):
-                    kit += 1
+            place = pd.DataFrame(index=['position_match' + str(num_match)])
+            for player_id in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]) - 1):
+                try:
+                    place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
+                        'lastPlaceName']] += 1
+                    if (side == "ct") & (list_match[num_match]["gameRounds"][round_t]["frames"][frame]["ct"]["players"][player_id]['hasDefuse']) & (kit<=num_match):
+                        kit += 1
+                except:
+                    place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
+                        'lastPlaceName']] = 1
+                    if (side == "ct") & (list_match[num_match]["gameRounds"][round_t]["frames"][frame]["ct"]["players"][player_id]['hasDefuse'])& (kit<=num_match):
+                        kit += 1
 
-        dataframe_position_final = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"], 'x', 'y',dataframe_position_final,["name"])
-        dataframe_grenade = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]['grenades'], "grenadeX", "grenadeY",dataframe_grenade, ["grenadeType",'throwClockTime',"throwerSide"])
-        prob_place = pd.concat([place, prob_place]).fillna(0)
+            dataframe_position_final = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"], 'x', 'y',dataframe_position_final,["name","activeWeapon"])
+            #dataframe_grenade = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]['grenades'], "grenadeX", "grenadeY",dataframe_grenade, ["grenadeType",'throwClockTime',"throwerSide"])
+            prob_place = pd.concat([place, prob_place]).fillna(0)
 
-    if side == "ct":
-        print("Kit prob :",kit)
+        if side == "ct":
+            print("Kit prob :",kit)
 
-    prob_place = prob_place.groupby(prob_place.columns.tolist()).size().reset_index(). \
-        rename(columns={0: 'records'})
-    prob_place['prob'] = prob_place['records'] / len(list_match)
-    prob_place = prob_place.drop('records', axis=1)
-    if side == 't':
-        SIDE = 'T'
-    else:
-        SIDE = 'CT'
-    dataframe_grenade = dataframe_grenade[pd.Series([(","+SIDE in e) for e in dataframe_grenade['info']])].reset_index(drop=True)
-    dataframe_position_final['Bombsite'] = bombsite
-    dataframe_position_final['Match_ID'] = list_cpt
-    dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
-    dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
-    data_player = plot_map_list_of_game(dataframe_position_final, map_select,text = True, nb_games = len(list_match))
-   # if not dataframe_grenade.empty:
-     #   data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True,nb_games = len(list_match))
+        prob_place = prob_place.groupby(prob_place.columns.tolist()).size().reset_index(). \
+            rename(columns={0: 'records'})
+        prob_place['prob'] = prob_place['records'] / len(list_match)
+        prob_place = prob_place.drop('records', axis=1)
+        if side == 't':
+            SIDE = 'T'
+        else:
+            SIDE = 'CT'
+        dataframe_grenade = dataframe_grenade[pd.Series([(","+SIDE in e) for e in dataframe_grenade['info']])].reset_index(drop=True)
+        dataframe_position_final['Bombsite'] = bombsite
+        dataframe_position_final['Match_ID'] = list_cpt
+        dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
+        dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
+        print("FRAMES:",frame)
+        data_player = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match))
+        image = imageio.v2.imread(f'./demo_csgo/img/img_{frame}.png')
+        gif_frames.append(image) 
+    imageio.mimsave(f'demo_csgo/img/{side}.gif', # output gif
+            gif_frames,          # array of input frames
+            fps = 1)         # optional: frames per second
+    
+
+        
+    # if not dataframe_grenade.empty:
+        #   data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True,nb_games = len(list_match))
 
     return prob_place,data_player
 
@@ -240,3 +252,99 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
                                          [pistol_t_a / (pistol_t_a + pistol_t_b),pistol_t_b / (pistol_t_a + pistol_t_b),round_time_before_plant_pistol.mean(), np.median(round_time_before_plant_pistol),
           round_time_before_plant_pistol.std(), len(round_time_before_plant_pistol)]]))
     return data
+
+
+
+def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_type = "Full Buy",premade = []):
+    
+   
+    
+    dataframe_position_final = pd.DataFrame(columns=['x', 'y'])
+    dataframe_grenade = pd.DataFrame(columns=['x', 'y', "info"])
+    bombsite = []
+#list_match = read_all_csgo_match_of_one_map_json(map_select)
+    kit = 0
+    prob_place = pd.DataFrame()
+    cpt = 0
+    list_cpt = []
+    cpt2 = 0
+    match_id = []
+    for num_match in range(len(list_match)):
+        
+        round = 0
+        cpt2+=1
+        if ((cpt2== 5)&(buy_type=="Full Buy")) :
+            break
+        for i in range(len(list_match[num_match]["gameRounds"][round]["frames"][frame][side]['players'])):
+            if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
+                round = 0
+                break
+            else:
+                round = 15
+        for round_t in range(round, int(round * len(list_match[num_match]["gameRounds"]) / 15 + 15 - round)):
+            if (((side == "t") & (list_match[num_match]["gameRounds"][round_t]['tBuyType'] != buy_type)) | (round_t == 0) | (round_t==15)):
+               # print(side,list_match[num_match]["gameRounds"][round_t]['tBuyType'],round_t)
+                continue
+            if (((side == "ct") & (list_match[num_match]["gameRounds"][round_t]['ctBuyType'] != buy_type)) | (round_t == 0) | (round_t==15)):
+               # print(side,list_match[num_match]["gameRounds"][round_t]['ctBuyType'],round_t)
+                continue       
+            bombsiteA,bombsiteB = coordonee_bomb_site(list_match[0])
+            bomb = [list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['x'],
+                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y']]
+            distA = distance_point(bomb, bombsiteA)
+            distB = distance_point(bomb, bombsiteB)
+            if distA <= distB:
+                for i in range(5):
+                    bombsite.append('A')
+                    list_cpt.append(cpt)
+                    match_id.append(cpt2)
+                cpt += 1
+            else :
+                for i in range(5):
+                    bombsite.append('B')
+                    list_cpt.append(cpt)
+                    match_id.append(cpt2)
+                cpt += 1
+                
+            place = pd.DataFrame(index=['position_match' + str(num_match)])
+            for player_id in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]) - 1):
+                try:
+                    place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
+                        'lastPlaceName']] += 1
+                    if (side == "ct") & (list_match[num_match]["gameRounds"][round_t]["frames"][frame]["ct"]["players"][player_id]['hasDefuse']) & (kit<=num_match):
+                        kit += 1
+                except:
+                    place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
+                        'lastPlaceName']] = 1
+                    if (side == "ct") & (list_match[num_match]["gameRounds"][round_t]["frames"][frame]["ct"]["players"][player_id]['hasDefuse'])& (kit<=num_match):
+                        kit += 1
+
+            dataframe_position_final = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"], 'x', 'y',dataframe_position_final,["name","activeWeapon"])
+            #dataframe_grenade = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]['grenades'], "grenadeX", "grenadeY",dataframe_grenade, ["grenadeType",'throwClockTime',"throwerSide"])
+            prob_place = pd.concat([place, prob_place]).fillna(0)
+
+    if side == "ct":
+        print("Kit prob :",kit)
+
+    prob_place = prob_place.groupby(prob_place.columns.tolist()).size().reset_index(). \
+        rename(columns={0: 'records'})
+    prob_place['prob'] = prob_place['records'] / len(list_match)
+    prob_place = prob_place.drop('records', axis=1)
+    if side == 't':
+        SIDE = 'T'
+    else:
+        SIDE = 'CT'
+    dataframe_grenade = dataframe_grenade[pd.Series([(","+SIDE in e) for e in dataframe_grenade['info']])].reset_index(drop=True)
+    dataframe_position_final['Bombsite'] = bombsite
+    dataframe_position_final['Match_ID'] = match_id
+    dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
+    dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
+    print("FRAMES:",frame)
+    data_player = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match),premade = premade)
+
+
+        
+    # if not dataframe_grenade.empty:
+        #   data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True,nb_games = len(list_match))
+
+    return prob_place,data_player

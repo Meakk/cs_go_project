@@ -39,12 +39,12 @@ def get_coord_dataframe(map_select,dic_list,x,y,dataframe_position_final):
         dataframe_position_final = position_coordonate(dataframe_position_final,map_select,X,Y)
     return dataframe_position_final
 
-def position_coordonate(dataframe_position_final,map,x,y,information = None):
+def position_coordonate(dataframe_position_final,map,names,x,y,information = None):
     x_correct = pointx_to_resolutionx(x,map)
     y_correct = pointy_to_resolutiony(y,map)
     dataframe_position = pd.DataFrame([[x_correct,y_correct]],columns=['x','y'])
     if information != None:
-        dataframe_position = pd.DataFrame([[x_correct, y_correct,information]], columns=['x', 'y','info'])
+        dataframe_position = pd.DataFrame([[x_correct, y_correct,information,names]], columns=['x', 'y','info',"name"])
     return  dataframe_position_final.append(dataframe_position).reset_index(drop=True)
 
 
@@ -53,8 +53,9 @@ def get_coord_dataframe_with_info(map_select,dic_list,x,y,dataframe_position_fin
         information = []
         X = element[x]
         Y = element[y]
+        names = element["name"]
         for i in info:
             information.append(element[i])
         information_str = ','.join(str(e) for e in information)
-        dataframe_position_final = position_coordonate(dataframe_position_final,map_select,X,Y,information_str)
+        dataframe_position_final = position_coordonate(dataframe_position_final,map_select,names,X,Y,information_str)
     return dataframe_position_final

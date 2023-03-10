@@ -5,10 +5,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     wine \
-    p7zip-full \
-    curl \
-    gcc \
-    libc6-dev
+    p7zip-full 
 
 
 RUN apt-get -y install python3
@@ -24,9 +21,16 @@ RUN wine /tmp/winrar.exe /S
 # Clean up installation files
 RUN rm /tmp/winrar.exe
 
+RUN apt-get update
+RUN apt-get -y install python3
+RUN apt-get -y install python3-setuptools
+RUN apt-get -y install python3-pip
+
+
 ADD Match_recuperation Match_recuperation
 COPY requirements.txt .
 COPY match_download_container_1_app.py .
 RUN pip install -r requirements.txt
+WORKDIR /go
 EXPOSE 80
 CMD ["python3", "match_download_container_1_app.py"]

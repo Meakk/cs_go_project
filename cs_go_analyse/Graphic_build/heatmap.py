@@ -5,7 +5,10 @@ from io import BytesIO
 import base64
 from matplotlib.patches import Rectangle
 
-def plot_map_list_of_game(dataframe_position,carte,text = False,nb_games = 4):
+def plot_map_list_of_game(dataframe_position,carte,frame,text = False,nb_games = 4,premade = []):
+    if premade != []:
+        dataframe_position = dataframe_position[dataframe_position['name'].isin(premade)].reset_index()
+    plt.ioff() # DISABLE GRAPH SHOW
     map_bg = plt.imread("demo_csgo/map_adjustement/"+carte+".png")
     plt.figure()
     fig, ax = plt.subplots(figsize=(15, 15))
@@ -41,5 +44,11 @@ def plot_map_list_of_game(dataframe_position,carte,text = False,nb_games = 4):
     cb = fig.colorbar(hb, ax=ax, cax=cax)
     buf = BytesIO()
     fig.savefig(buf, format="png")
+    plt.savefig(fname = f'./demo_csgo/img/img_{frame}.png',transparent = False,
+                facecolor = 'white')
+    plt.show()
     return base64.b64encode(buf.getbuffer()).decode("ascii")
 
+
+    
+        
