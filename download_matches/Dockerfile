@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM golang
 
 # Install necessary system dependencies
 RUN apt-get update && apt-get install -y \
@@ -9,6 +9,11 @@ RUN apt-get update && apt-get install -y \
     curl \
     gcc \
     libc6-dev
+
+
+RUN apt-get -y install python3
+RUN apt-get -y install python3-setuptools
+RUN apt-get -y install python3-pip
 
 # Download WinRAR installer
 RUN wget -O /tmp/winrar.exe https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-611.exe
@@ -24,4 +29,4 @@ COPY requirements.txt .
 COPY match_download_container_1_app.py .
 RUN pip install -r requirements.txt
 EXPOSE 80
-CMD ["python", "match_download_container_1_app.py"]
+CMD ["python3", "match_download_container_1_app.py"]
