@@ -157,37 +157,39 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
             distB = distance_point(bomb, bombsiteB)
             
             if distA <= distB:
-                if buy_type == "Full Eco":
-                    Full_Eco_a += 1
-                if buy_type == "Semi Eco":
-                    Semi_Eco_a += 1
-                if buy_type == "Semi Buy":
-                    Semi_Buy_a += 1
-                if buy_type == "Full Buy":
-                    Full_Buy_a += 1
+                if ((round != 15)|(round != 0)):
+                    if buy_type == "Full Eco":
+                        Full_Eco_a += 1
+                    if buy_type == "Semi Eco":
+                        Semi_Eco_a += 1
+                    if buy_type == "Semi Buy":
+                        Semi_Buy_a += 1
+                    if buy_type == "Full Buy":
+                        Full_Buy_a += 1
 
-                if ct_buy_type == "Semi Eco":
-                    ct_Full_Eco_a += 1
-                if ct_buy_type == "Full Eco":
-                    ct_Full_Eco_a += 1
+                    if ct_buy_type == "Semi Eco":
+                        ct_Full_Eco_a += 1
+                    if ct_buy_type == "Full Eco":
+                        ct_Full_Eco_a += 1
                     
                 if ((round == 15)|(round == 0)):
                     pistol_t_a +=1
 
             if distB < distA:
-                if buy_type == "Full Eco":
-                    Full_Eco_b += 1
-                if buy_type == "Semi Eco":
-                    Semi_Eco_b += 1
-                if buy_type == "Semi Buy":
-                    Semi_Buy_b += 1
-                if buy_type == "Full Buy":
-                    Full_Buy_b += 1
+                if ((round != 15)|(round != 0)):
+                    if buy_type == "Full Eco":
+                        Full_Eco_b += 1
+                    if buy_type == "Semi Eco":
+                        Semi_Eco_b += 1
+                    if buy_type == "Semi Buy":
+                        Semi_Buy_b += 1
+                    if buy_type == "Full Buy":
+                        Full_Buy_b += 1
 
-                if ct_buy_type == "Semi Eco":
-                    ct_Full_Eco_b += 1
-                if ct_buy_type == "Full Eco":
-                    ct_Full_Eco_b += 1
+                    if ct_buy_type == "Semi Eco":
+                        ct_Full_Eco_b += 1
+                    if ct_buy_type == "Full Eco":
+                        ct_Full_Eco_b += 1
                     
                 if ((round == 15)|(round == 0)):
                     pistol_t_b +=1
