@@ -47,7 +47,8 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',start_frame
                     
             bombsiteA,bombsiteB = coordonee_bomb_site(list_match[0])
             bomb = [list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['x'],
-                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y']]
+                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y'],
+                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['z']]
             distA = distance_point(bomb, bombsiteA)
             distB = distance_point(bomb, bombsiteB)
             if distA <= distB:
@@ -73,7 +74,7 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',start_frame
                         'lastPlaceName']] = 1
                     if (side == "ct") & (list_match[num_match]["gameRounds"][round_t]["frames"][frame]["ct"]["players"][player_id]['hasDefuse'])& (kit<=num_match):
                         kit += 1
-
+            
             dataframe_position_final = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"], 'x', 'y',dataframe_position_final,["name","activeWeapon"])
             #dataframe_grenade = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]['grenades'], "grenadeX", "grenadeY",dataframe_grenade, ["grenadeType",'throwClockTime',"throwerSide"])
             prob_place = pd.concat([place, prob_place]).fillna(0)
@@ -94,7 +95,7 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',start_frame
         dataframe_position_final['Match_ID'] = list_cpt
         dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
         dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
-        print("FRAMES:",frame)
+        
         data_player = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match))
         image = imageio.v2.imread(f'./demo_csgo/img/img_{frame}.png')
         gif_frames.append(image) 
@@ -152,7 +153,8 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
             buy_type = list_match[num_match]["gameRounds"][round]['tBuyType']
             ct_buy_type = list_match[num_match]["gameRounds"][round]['ctBuyType']
             bomb = [list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['x'],
-                    list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['y']]
+                    list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['y'],
+                    list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['z']]
             distA = distance_point(bomb, bombsiteA)
             distB = distance_point(bomb, bombsiteB)
             
@@ -292,7 +294,8 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
                 continue       
             bombsiteA,bombsiteB = coordonee_bomb_site(list_match[0])
             bomb = [list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['x'],
-                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y']]
+                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y'],
+                        list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['z']]
             distA = distance_point(bomb, bombsiteA)
             distB = distance_point(bomb, bombsiteB)
             if distA <= distB:

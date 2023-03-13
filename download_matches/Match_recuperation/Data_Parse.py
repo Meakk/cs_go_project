@@ -89,13 +89,14 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             }
             
             proc.append(multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname,i )))
+           # proc[succeed].start()
             succeed += 1
             if succeed >= nb_match_analyses_max:
                 print("Enough matches downloaded")
                 break
   
      #  except:
-      #      print("error before download and parse")
+      #      print("error before download and parse"
     for proc1 in proc :
         proc1.start()
     print("En attente de FIN download and parse")
@@ -118,8 +119,10 @@ def download_parse(url,match_details,all_match_player,nickname,i):
         # print('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
         print('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem.7z')
+        
         patoolib.extract_archive('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem.7z', outdir="demo_csgo/DataBase")
+        print("extract to:")
         s = match_details["demo_url"][0]
         pattern = "csgo/(.*?).dem"
         match_name = re.search(pattern, s).group(1)

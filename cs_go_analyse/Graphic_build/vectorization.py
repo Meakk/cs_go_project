@@ -7,10 +7,10 @@ def coordonee_bomb_site(data):
         try:
             for player in data["gameRounds"][r]["frames"][-1]['ct']['players']:
                 if player["lastPlaceName"]=="BombsiteB":
-                    coor_B= [player['x'],player['y']]
+                    coor_B= [player['x'],player['y'],player['z']]
                     check_a=1
                 if player["lastPlaceName"] == "BombsiteA":
-                    coor_A = [player['x'], player['y']]
+                    coor_A = [player['x'], player['y'],player['z']]
                     check_b=1
                 if ((check_a == 1) & (check_b==1)):
                     break
@@ -19,5 +19,5 @@ def coordonee_bomb_site(data):
     return coor_A,coor_B
 
 def distance_point(vector1,vector2):
-    distance = math.sqrt((vector2[0] - vector1[0]) * (vector2[0] - vector1[0])  + (vector2[1] - vector1[1])  * (vector2[1] - vector1[1]))
+    distance = math.sqrt((vector2[0] - vector1[0]) * (vector2[0] - vector1[0])  + (vector2[1] - vector1[1])  * (vector2[1] - vector1[1])  + (vector2[2] - vector1[2])  * (vector2[2] - vector1[2]))
     return distance/100
