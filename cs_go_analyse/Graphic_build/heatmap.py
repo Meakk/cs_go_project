@@ -9,7 +9,6 @@ def plot_map_list_of_game(dataframe_position,carte,frame,text = False,nb_games =
     if premade != []:
         dataframe_position = dataframe_position[dataframe_position['name'].isin(premade)].reset_index()
     if not dataframe_position.empty:
-        print(dataframe_position)
         plt.ioff() # DISABLE GRAPH SHOW
         map_bg = plt.imread("demo_csgo/map_adjustement/"+carte+".png")
         plt.figure()

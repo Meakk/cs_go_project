@@ -39,23 +39,24 @@ def get_coord_dataframe(map_select,dic_list,x,y,dataframe_position_final):
         dataframe_position_final = position_coordonate(dataframe_position_final,map_select,X,Y)
     return dataframe_position_final
 
-def position_coordonate(dataframe_position_final,map,names,x,y,information = None):
+def position_coordonate(dataframe_position_final,map,names,x,y,z,information = None):
     x_correct = pointx_to_resolutionx(x,map)
     y_correct = pointy_to_resolutiony(y,map)
-    dataframe_position = pd.DataFrame([[x_correct,y_correct]],columns=['x','y'])
+    dataframe_position = pd.DataFrame([[x_correct,y_correct,z]],columns=['x','y','z'])
     if information != None:
-        dataframe_position = pd.DataFrame([[x_correct, y_correct,information,names]], columns=['x', 'y','info',"name"])
+        dataframe_position = pd.DataFrame([[x_correct, y_correct,z,information,names]], columns=['x', 'y','z','info',"name"])
     return  dataframe_position_final.append(dataframe_position).reset_index(drop=True)
 
 
-def get_coord_dataframe_with_info(map_select,dic_list,x,y,dataframe_position_final, info = None):
+def get_coord_dataframe_with_info(map_select,dic_list,x,y,z,dataframe_position_final, info = None):
     for element in dic_list:
         information = []
         X = element[x]
         Y = element[y]
+        Z = element[z]
         names = element["name"]
         for i in info:
             information.append(element[i])
         information_str = ','.join(str(e) for e in information)
-        dataframe_position_final = position_coordonate(dataframe_position_final,map_select,names,X,Y,information_str)
+        dataframe_position_final = position_coordonate(dataframe_position_final,map_select,names,X,Y,Z,information_str)
     return dataframe_position_final
