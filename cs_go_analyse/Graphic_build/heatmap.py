@@ -15,7 +15,7 @@ def plot_map_list_of_game(dataframe_position,carte,frame,text = False,nb_games =
         fig, ax = plt.subplots(figsize=(15, 15))
         color = ['blue','orange','green','red','purple','black','pink','brown','cyan','olive','gray','darkred','teal']
         ax.set_title('Plot position')
-        for i in range(1,nb_games+1,1):
+        for i in range(0,nb_games,1):
             ax.scatter(
                             [dataframe_position['x'][((dataframe_position['Match_ID']==i) & (dataframe_position['Bombsite']=='A'))]],
                             [dataframe_position['y'][((dataframe_position['Match_ID']==i)& (dataframe_position['Bombsite']=='A'))]],

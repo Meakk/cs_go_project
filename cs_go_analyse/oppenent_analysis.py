@@ -8,6 +8,7 @@ import re
 import numpy as np
 import os
 import imageio
+from IPython.display import display
 
 
 def read_all_csgo_match_of_one_map_json(map_wanted):
@@ -355,8 +356,6 @@ def ct_positionement_start(player_name, map_select,list_match,frame = 7,buy_type
     side = "ct"
     prob_place = pd.DataFrame()
     dataframe_position_final = pd.DataFrame(columns=['x', 'y','z'])
-    df_ct_position = pd.DataFrame(index = ["Full_eco_T","Semi_eco_T","Semi_buy_T","Full_buy_T","CT_in_Eco","Pistol_rounds"],
-                                  columns=['site A', 'site B','nb_sample'])
     cpt2 = 0
     bombsiteA,bombsiteB = coordonee_bomb_site(list_match[0])
     bombsiteA = [pointx_to_resolutionx(bombsiteA[0],map_select),pointy_to_resolutiony(bombsiteA[1],map_select),bombsiteA[2]]
@@ -370,16 +369,19 @@ def ct_positionement_start(player_name, map_select,list_match,frame = 7,buy_type
         if ((cpt2== 5)&(buy_type=="Full Buy")) :
             break
         
+        
         for i in range(len(list_match[num_match]["gameRounds"][round]["frames"][frame][side]['players'])):
             if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
                 round = 0
                 break
             else:
                 round = 15
+        
         for round_t in range(round, int(round * len(list_match[num_match]["gameRounds"]) / 15 + 15 - round)):
-            if (((side == "ct") & (list_match[num_match]["gameRounds"][round_t]['ctBuyType'] != buy_type))):
+            if (((side == "ct") & (buy_type != "Pistol Round") & (list_match[num_match]["gameRounds"][round_t]['ctBuyType'] != buy_type))):
                 continue
-            
+            if ((round_t!= 0)&(round_t!= 15)&(buy_type=="Pistol Round")) :
+                continue
             place = pd.DataFrame(index=['position_match' + str(num_match)])
             
             for player_id in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]) - 1):
@@ -396,17 +398,29 @@ def ct_positionement_start(player_name, map_select,list_match,frame = 7,buy_type
             #dataframe_grenade = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]['grenades'], "grenadeX", "grenadeY",dataframe_grenade, ["grenadeType",'throwClockTime',"throwerSide"])
             prob_place = pd.concat([place, prob_place]).fillna(0)
     cols = ['x','y','z']
+    
     dataframe_position_final['round_compteur'] = round_number
     dataframe_position_final['coord'] = dataframe_position_final[cols].values.tolist()
     dataframe_position_final['dist_a'] = dataframe_position_final['coord'].apply(lambda x : distance_point(x,bombsiteA,map_select))
     dataframe_position_final['dist_b'] = dataframe_position_final['coord'].apply(lambda x : distance_point(x,bombsiteB,map_select))
-    #distA = distance_point(bomb, bombsiteA)
-    #distB = distance_point(bomb, bombsiteB)
     dataframe_position_final['A_site'] = dataframe_position_final['dist_a'] < dataframe_position_final['dist_b']
+    df = dataframe_position_final.copy()
     dataframe_position_final = dataframe_position_final.groupby('round_compteur').sum()
     dataframe_position_final['B_site'] = 5 - dataframe_position_final['A_site']
     df3 = dataframe_position_final.groupby(['A_site','B_site']).count()
     df3['Proba'] = (dataframe_position_final.groupby(['A_site','B_site']).count()/len(dataframe_position_final)*100)['x']
     df3['nb_sample'] = (dataframe_position_final.groupby(['A_site','B_site']).count())['x']
     df3 = df3 [['Proba','nb_sample']]
+    
+    if map_select == "de_inferno" : 
+        df['push_apps_inferno'] = (df['x'] < 690) & (df['y'] >= 760)
+        df['push_B_inferno'] = (df['x'] < 530) & (df['y'] > 400) & (df['y'] < 560)
+        df['push_mid_inferno'] = (df['x'] < 500) & (df['y'] < 800) & (df['y'] > 540)
+        df = df.groupby('round_compteur').sum()
+        df4 = df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count()
+        df4['Proba'] = (df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count()/len(df)*100)['x']
+        df4['nb_sample'] = (df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count())['x']
+        df4 = df4[['Proba','nb_sample']]
+        display(df4)
+        
     return df3
