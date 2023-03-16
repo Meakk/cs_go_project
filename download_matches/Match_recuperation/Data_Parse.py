@@ -89,7 +89,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
             }
             
             proc.append(multiprocessing.Process(target=download_parse, args=(url,match_details,all_match_player,nickname,i )))
-           # proc[succeed].start()
+            proc[succeed].start()
             succeed += 1
             if succeed >= nb_match_analyses_max:
                 print("Enough matches downloaded")
@@ -97,11 +97,14 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
   
      #  except:
       #      print("error before download and parse"
-    for proc1 in proc :
-        proc1.start()
+    #for proc1 in proc :
+      #  proc1.start()
     print("En attente de FIN download and parse")
-    for proc1 in proc :
-        proc1.join()
+    print("succeed",succeed)
+    for proc2 in proc :
+        proc2.join()
+    #b = multiprocessing.Barrier(succeed)
+    #b.wait()
     print("DONE Doawnloading and parsing")
 
 
@@ -113,7 +116,7 @@ def download_parse(url,match_details,all_match_player,nickname,i):
         print(url)
         r = requests.get(url)
         #  print(r.status_code)
-        with open('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+        with open('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0] + "_" + str(
                 match_details["configured_at"]) + '.dem.7z', 'wb') as f:
             f.write(r.content)
         # print('demo_csgo/DataBase/'+match_details["voting"]["map"]["pick"][0]+"_"+str(match_details["configured_at"])+'.dem.7z')
@@ -129,17 +132,29 @@ def download_parse(url,match_details,all_match_player,nickname,i):
 
         print("debut du parse",'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem')
-        demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + '.dem',
-                                demo_id=nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + "_" + match_name,
-                                parse_rate=128, 
-                                outpath = 'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/')
-        data = demo_parser.parse()
+        try:
+            demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + '.dem',
+                                    demo_id=nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + "_" + match_name,
+                                    parse_rate=128, 
+                                    outpath = 'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/')
+            data = demo_parser.parse()
+            os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem')
+            os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem.7z')
+        except : 
+            
+            demo_parser = DemoParser(demofile='demo_csgo/DataBase/' +match_name+ '.dem',
+                                    demo_id=nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + "_" + match_name,
+                                    parse_rate=128, 
+                                    outpath = 'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/')
+            data = demo_parser.parse()
+            os.remove('demo_csgo/DataBase/' + match_name+ '.dem')
+            os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
+            match_details["configured_at"]) + '.dem.7z')
         print("parse success")
 
-        os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-            match_details["configured_at"]) + '.dem')
-        os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
-            match_details["configured_at"]) + '.dem.7z')
+        
     #    os.remove(str(match_details["configured_at"]) + ".json")
     #    match_name = all_match_player["items"][i]["match_id"]
 

@@ -140,7 +140,8 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
     
     pistol_t_b = 0
     pistol_t_a = 0
-
+    bomb_dataframe = pd.DataFrame(columns = ['x','y','z','side_A'])
+    
     for num_match in range(len(list_match)):
         round_t = 0
         for i in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]['players'])):
@@ -157,7 +158,8 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
                     list_match[num_match]["gameRounds"][round]["frames"][frame]['bomb']['z']]
             distA = distance_point(bomb, bombsiteA,map_select)
             distB = distance_point(bomb, bombsiteB,map_select)
-            
+            bomb_list = {'x':pointx_to_resolutionx(bomb[0],map_select) , 'y':pointy_to_resolutiony(bomb[1],map_select), 'z': bomb[2],'side_A' : distA < distB}
+            bomb_dataframe = bomb_dataframe.append(bomb_list,ignore_index = True)
             if distA <= distB:
                 if ((round != 15)|(round != 0)):
                     if buy_type == "Full Eco":
@@ -255,6 +257,10 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
                                          [ct_Full_Eco_a / (ct_Full_Eco_a + ct_Full_Eco_b),ct_Full_Eco_b / (ct_Full_Eco_a + ct_Full_Eco_b)],
                                          [pistol_t_a / (pistol_t_a + pistol_t_b),pistol_t_b / (pistol_t_a + pistol_t_b),round_time_before_plant_pistol.mean(), np.median(round_time_before_plant_pistol),
           round_time_before_plant_pistol.std(), len(round_time_before_plant_pistol)]]))
+    
+    #data_bomb = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match),premade = premade)
+    print(bomb_dataframe)
+    plot_from_df(bomb_dataframe,map_select)
     return data
 
 

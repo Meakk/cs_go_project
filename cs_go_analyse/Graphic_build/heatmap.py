@@ -52,6 +52,29 @@ def plot_map_list_of_game(dataframe_position,carte,frame,text = False,nb_games =
     else :
         print(dataframe_position,"nothing in df")
         return 1
+    
+def plot_from_df(dataframe_position,carte):
+        map_bg = plt.imread("demo_csgo/map_adjustement/"+carte+".png")
+        plt.figure()
+        fig, ax = plt.subplots(figsize=(15, 15))
+        ax.set_title('Plot position')
+        ax.scatter(
+                            [dataframe_position['x'][dataframe_position['side_A']==True]],
+                            [dataframe_position['y'][dataframe_position['side_A']==True]],
+                                alpha=1,
+                                zorder=3,
+                                cmap='hot',
+                                marker = '+'
+                            )
+        ax.scatter(
+                        [dataframe_position['x'][dataframe_position['side_A']==False]],
+                        [dataframe_position['y'][dataframe_position['side_A']==False]],
+                            alpha=1,
+                            zorder=3,
+                            cmap='hot',
+                            )
+        ax.imshow(map_bg,zorder=0)
+        plt.show()
 
 
     

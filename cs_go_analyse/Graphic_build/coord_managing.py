@@ -10,7 +10,7 @@ def pointx_to_resolutionx(xinput,map_of_games,resX=1024):
     if startX < 0:
         xinput += startX *(-1.0)
     else:
-        xinput += startX
+        xinput += startX 
     xoutput = float((xinput / abs(sizeX)) * resX)
     return xoutput
  #   except:
