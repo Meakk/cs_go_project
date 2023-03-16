@@ -9,3 +9,5 @@ de_nuke,3681,2896,1024,1024,-3427,-4302
 de_vertigo,2262,2447,1024,1024,-2436,-2469
 de_ancient,1395,1516,1024,1024,-2202,-2144
 de_inferno,6961.894 , 6007.5 ,1024,1024,2029.934,1096.43
+
+https://www.wolframalpha.com/input?i=systems+of+equations+calculator&assumption=%7B%22F%22%2C+%22SolveSystemOf2EquationsCalculator%22%2C+%22equation1%22%7D+-%3E%221024+-+%28%28%28893.230164+%2B+%7CX%7C%29+%2F+%7C%28Y+-+X%29%7C%29+*+1024%29+%3D+609.140018%22&assumption=%22FSelect%22+-%3E+%7B%7B%22SolveSystemOf2EquationsCalculator%22%7D%7D&assumption=%7B%22F%22%2C+%22SolveSystemOf2EquationsCalculator%22%2C+%22equation2%22%7D+-%3E%221024+-+%28%28%281874.906372+%2B+%7CX%7C%29+%2F+%7C%28Y+-+X%29%7C%29+*+1024%29+%3D+404.452360%22
