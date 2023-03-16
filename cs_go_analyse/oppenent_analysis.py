@@ -125,6 +125,7 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
     round_time_before_plant_Semi_Buy = []
     round_time_before_plant_Full_Buy = []
     round_time_before_plant_pistol = []
+    round_time_before_plant_ct_eco = []
 
     Full_Eco_a = 0
     Semi_Eco_a = 0
@@ -208,40 +209,52 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
                         break
                 round_time_before_plant_pistol.append(round_duration)
                 
-            if buy_type == "Full Eco":
+            if ((buy_type == "Full Eco")&((round != 15)|(round != 0))):
                 round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
                 for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
                     if i["bombAction"] == "plant":
                         round_duration = i['seconds']
                         break
                 round_time_before_plant_Full_Eco.append(round_duration)
-            if buy_type == "Semi Eco":
+                
+            if ((buy_type == "Semi Eco")&((round != 15)|(round != 0))):
                 round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
                 for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
                     if i["bombAction"] == "plant":
                         round_duration = i['seconds']
                         break
                 round_time_before_plant_Semi_Eco.append(round_duration)
-            if buy_type == "Semi Buy":
+                
+            if ((buy_type == "Semi Buy")&((round != 15)|(round != 0))):
                 round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
                 for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
                     if i["bombAction"] == "plant":
                         round_duration = i['seconds']
                         break
                 round_time_before_plant_Semi_Buy.append(round_duration)
-            if buy_type == "Full Buy":
+                
+            if ((buy_type == "Full Buy")&((round != 15)|(round != 0))):
                 round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
                 for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
                     if i["bombAction"] == "plant":
                         round_duration = i['seconds']
                         break
                 round_time_before_plant_Full_Buy.append(round_duration)
+                
+            if (((ct_buy_type == "Full Eco")|(ct_buy_type == "Semi Eco"))&((round != 15)|(round != 0))):
+                round_duration = list_match[num_match]["gameRounds"][round]['frames'][-1]['seconds']
+                for i in list_match[num_match]["gameRounds"][round]['bombEvents']:
+                    if i["bombAction"] == "plant":
+                        round_duration = i['seconds']
+                        break
+                round_time_before_plant_ct_eco.append(round_duration)
 
     round_time_before_plant_Full_Eco = np.array(round_time_before_plant_Full_Eco)
     round_time_before_plant_Semi_Eco = np.array(round_time_before_plant_Semi_Eco)
     round_time_before_plant_Semi_Buy = np.array(round_time_before_plant_Semi_Buy)
     round_time_before_plant_Full_Buy = np.array(round_time_before_plant_Full_Buy)
     round_time_before_plant_pistol = np.array(round_time_before_plant_pistol)
+    round_time_before_plant_ct_eco = np.array(round_time_before_plant_ct_eco)
     
     data = pd.DataFrame(index= ["Full_eco_T","Semi_eco_T","Semi_buy_T","Full_buy_T","CT_in_Eco","Pistol_rounds"],
                         columns = ["prob_go_A","prob_go_B","Mean_Sec_Round_before_plant(s)","Med_Sec_Round_before_plant(s)"
@@ -254,12 +267,12 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
           round_time_before_plant_Semi_Buy.std(), len(round_time_before_plant_Semi_Buy)],
                                          [Full_Buy_a / (Full_Buy_a + Full_Buy_b),Full_Buy_b / (Full_Buy_a + Full_Buy_b),round_time_before_plant_Full_Buy.mean(), np.median(round_time_before_plant_Full_Buy),
           round_time_before_plant_Full_Buy.std(), len(round_time_before_plant_Full_Buy)],
-                                         [ct_Full_Eco_a / (ct_Full_Eco_a + ct_Full_Eco_b),ct_Full_Eco_b / (ct_Full_Eco_a + ct_Full_Eco_b)],
+                                         [ct_Full_Eco_a / (ct_Full_Eco_a + ct_Full_Eco_b),ct_Full_Eco_b / (ct_Full_Eco_a + ct_Full_Eco_b),round_time_before_plant_ct_eco.mean(), np.median(round_time_before_plant_ct_eco),
+          round_time_before_plant_ct_eco.std(), len(round_time_before_plant_ct_eco)],
                                          [pistol_t_a / (pistol_t_a + pistol_t_b),pistol_t_b / (pistol_t_a + pistol_t_b),round_time_before_plant_pistol.mean(), np.median(round_time_before_plant_pistol),
           round_time_before_plant_pistol.std(), len(round_time_before_plant_pistol)]]))
     
     #data_bomb = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match),premade = premade)
-    print(bomb_dataframe)
     plot_from_df(bomb_dataframe,map_select)
     return data
 
