@@ -296,7 +296,6 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
     for num_match in range(len(list_match)):
         
         round = 0
-        print(num_match)
         if ((num_match == 5)&(buy_type=="Full Buy")) :
             break
         for i in range(len(list_match[num_match]["gameRounds"][round]["frames"][frame][side]['players'])):
