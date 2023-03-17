@@ -96,7 +96,7 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',start_frame
         dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
         dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
         
-        data_player = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match))
+        data_player = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match),color_set = "Match_ID")
         image = imageio.v2.imread(f'./demo_csgo/img/img_{frame}.png')
         gif_frames.append(image) 
     imageio.mimsave(f'demo_csgo/img/{side}.gif', # output gif
@@ -290,13 +290,14 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
     prob_place = pd.DataFrame()
     cpt = 0
     list_cpt = []
-    cpt2 = 0
+    cpt2 = -1
     match_id = []
+    round_id = []
     for num_match in range(len(list_match)):
         
         round = 0
-        cpt2+=1
-        if ((cpt2== 5)&(buy_type=="Full Buy")) :
+        print(num_match)
+        if ((num_match == 5)&(buy_type=="Full Buy")) :
             break
         for i in range(len(list_match[num_match]["gameRounds"][round]["frames"][frame][side]['players'])):
             if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
@@ -310,7 +311,8 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
                 continue
             if (((side == "ct") & (list_match[num_match]["gameRounds"][round_t]['ctBuyType'] != buy_type)) | (round_t == 0) | (round_t==15)):
                # print(side,list_match[num_match]["gameRounds"][round_t]['ctBuyType'],round_t)
-                continue       
+                continue     
+            cpt2+=1  
             bombsiteA,bombsiteB = coordonee_bomb_site(list_match[0])
             bomb = [list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['x'],
                         list_match[num_match]["gameRounds"][round_t]["frames"][-1]['bomb']['y'],
@@ -320,14 +322,14 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
             if distA <= distB:
                 for i in range(5):
                     bombsite.append('A')
-                    list_cpt.append(cpt)
-                    match_id.append(cpt2)
+                    match_id.append(num_match)
+                    round_id.append(cpt2)
                 cpt += 1
             else :
                 for i in range(5):
                     bombsite.append('B')
-                    list_cpt.append(cpt)
-                    match_id.append(cpt2)
+                    match_id.append(num_match)
+                    round_id.append(cpt2)
                 cpt += 1
                 
             place = pd.DataFrame(index=['position_match' + str(num_match)])
@@ -360,6 +362,7 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
     dataframe_grenade = dataframe_grenade[pd.Series([(","+SIDE in e) for e in dataframe_grenade['info']])].reset_index(drop=True)
     dataframe_position_final['Bombsite'] = bombsite
     dataframe_position_final['Match_ID'] = match_id
+    dataframe_position_final['Round_id'] = round_id
     dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
     dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
     data_player = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match),premade = premade)
@@ -440,6 +443,5 @@ def ct_positionement_start(player_name, map_select,list_match,frame = 7,buy_type
         df4['Proba'] = (df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count()/len(df)*100)['x']
         df4['nb_sample'] = (df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count())['x']
         df4 = df4[['Proba','nb_sample']]
-        display(df4)
         
     return df3

@@ -5,20 +5,23 @@ from io import BytesIO
 import base64
 from matplotlib.patches import Rectangle
 
-def plot_map_list_of_game(dataframe_position,carte,frame,text = False,nb_games = 4,premade = []):
+def plot_map_list_of_game(dataframe_position,carte,frame,text = False,nb_games = 4,premade = [],color_set = "Round_id"):
+    
     if premade != []:
         dataframe_position = dataframe_position[dataframe_position['name'].isin(premade)].reset_index()
+        color_set = "Match_ID"
     if not dataframe_position.empty:
         plt.ioff() # DISABLE GRAPH SHOW
         map_bg = plt.imread("demo_csgo/map_adjustement/"+carte+".png")
         plt.figure()
         fig, ax = plt.subplots(figsize=(15, 15))
-        color = ['blue','orange','green','red','purple','black','pink','brown','cyan','olive','gray','darkred','teal']
+        color = ['blue','orange','green','red','purple','black','pink','brown','cyan','olive','gray','darkred','teal','navy','white','lime','aquamarine','indigo','darkolivegreen','beige','thistle','fuchsia','coral']
         ax.set_title('Plot position')
+        
         for i in range(0,nb_games,1):
             ax.scatter(
-                            [dataframe_position['x'][((dataframe_position['Match_ID']==i) & (dataframe_position['Bombsite']=='A'))]],
-                            [dataframe_position['y'][((dataframe_position['Match_ID']==i)& (dataframe_position['Bombsite']=='A'))]],
+                            [dataframe_position['x'][((dataframe_position[color_set]==i) & (dataframe_position['Bombsite']=='A'))]],
+                            [dataframe_position['y'][((dataframe_position[color_set]==i)& (dataframe_position['Bombsite']=='A'))]],
                             color=color[i],
                                 alpha=1,
                                 zorder=3,
@@ -26,8 +29,8 @@ def plot_map_list_of_game(dataframe_position,carte,frame,text = False,nb_games =
                                 marker = '+'
                             )
             ax.scatter(
-                            [dataframe_position['x'][((dataframe_position['Match_ID']==i) & (dataframe_position['Bombsite']=='B'))]],
-                            [dataframe_position['y'][((dataframe_position['Match_ID']==i)& (dataframe_position['Bombsite']=='B'))]],
+                            [dataframe_position['x'][((dataframe_position[color_set]==i) & (dataframe_position['Bombsite']=='B'))]],
+                            [dataframe_position['y'][((dataframe_position[color_set]==i)& (dataframe_position['Bombsite']=='B'))]],
                             color=color[i],
                                 alpha=1,
                                 zorder=3,
