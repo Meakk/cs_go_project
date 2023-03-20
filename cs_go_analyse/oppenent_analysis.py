@@ -373,7 +373,7 @@ def round_analysis(player_name, map_select,list_match, side = 't',frame = 7,buy_
     # if not dataframe_grenade.empty:
         #   data_grenade = plot_map_list_of_game(dataframe_grenade, map_select, text = True,nb_games = len(list_match))
 
-   # return prob_place,data_player
+    return prob_place,data_player
 
 def ct_positionement_start(player_name, map_select,list_match,frame = 7,buy_type = "Full Buy"):
     side = "ct"
@@ -385,6 +385,8 @@ def ct_positionement_start(player_name, map_select,list_match,frame = 7,buy_type
     bombsiteB = [pointx_to_resolutionx(bombsiteB[0],map_select),pointy_to_resolutiony(bombsiteB[1],map_select),bombsiteB[2]]
     round_number = []
     round_compteur = 0
+    
+    frame_number = []
     for num_match in range(len(list_match)):
         
         round = 0
@@ -406,46 +408,58 @@ def ct_positionement_start(player_name, map_select,list_match,frame = 7,buy_type
             if ((round_t!= 0)&(round_t!= 15)&(buy_type=="Pistol Round")) :
                 continue
             place = pd.DataFrame(index=['position_match' + str(num_match)])
-            
-            for player_id in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]) - 1):
-                try:
-                    place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
-                        'lastPlaceName']] += 1
-                    round_number.append(round_compteur)
-                except:
-                    place[list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"][player_id][
-                        'lastPlaceName']] = 1
-                    round_number.append(round_compteur)
             round_compteur += 1
-            round_num = list_match[num_match]["gameRounds"][round_t]['roundNum'] - round
-            clock = list_match[num_match]["gameRounds"][round_t]["frames"][frame]['clockTime']
-            dataframe_position_final = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]["frames"][frame][side]["players"], 'x', 'y','z',dataframe_position_final,clock,round_num,["name","activeWeapon"])
-            #dataframe_grenade = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]['grenades'], "grenadeX", "grenadeY",dataframe_grenade, ["grenadeType",'throwClockTime',"throwerSide"])
-            prob_place = pd.concat([place, prob_place]).fillna(0)
+            for test_frame in range(4):
+                test_frame = test_frame + frame
+                
+                for player_id in range(len(list_match[num_match]["gameRounds"][round_t]["frames"][test_frame][side]) - 1):
+                    try:
+                        place[list_match[num_match]["gameRounds"][round_t]["frames"][test_frame][side]["players"][player_id][
+                            'lastPlaceName']] += 1
+                        round_number.append(round_compteur)
+                        frame_number.append(test_frame)
+                    except:
+                        place[list_match[num_match]["gameRounds"][round_t]["frames"][test_frame][side]["players"][player_id][
+                            'lastPlaceName']] = 1
+                        round_number.append(round_compteur)
+                        frame_number.append(test_frame)
+                
+                round_num = list_match[num_match]["gameRounds"][round_t]['roundNum'] - round
+                clock = list_match[num_match]["gameRounds"][round_t]["frames"][test_frame]['clockTime']
+                dataframe_position_final = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]["frames"][test_frame][side]["players"], 'x', 'y','z',dataframe_position_final,clock,round_num,["name","activeWeapon"])
+                #dataframe_grenade = get_coord_dataframe_with_info(map_select, list_match[num_match]["gameRounds"][round_t]['grenades'], "grenadeX", "grenadeY",dataframe_grenade, ["grenadeType",'throwClockTime',"throwerSide"])
+                prob_place = pd.concat([place, prob_place]).fillna(0)
     cols = ['x','y','z']
     
+    dataframe_position_final['frame_number'] = frame_number
     dataframe_position_final['round_compteur'] = round_number
     dataframe_position_final['coord'] = dataframe_position_final[cols].values.tolist()
     dataframe_position_final['dist_a'] = dataframe_position_final['coord'].apply(lambda x : distance_point(x,bombsiteA,map_select))
     dataframe_position_final['dist_b'] = dataframe_position_final['coord'].apply(lambda x : distance_point(x,bombsiteB,map_select))
     dataframe_position_final['A_site'] = dataframe_position_final['dist_a'] < dataframe_position_final['dist_b']
     df = dataframe_position_final.copy()
+    dataframe_position_final = dataframe_position_final[dataframe_position_final['frame_number']==10]
+    #df = dataframe_position_final.copy()
     dataframe_position_final = dataframe_position_final.groupby('round_compteur').sum()
     dataframe_position_final['B_site'] = 5 - dataframe_position_final['A_site']
     df3 = dataframe_position_final.groupby(['A_site','B_site']).count()
     df3['Proba'] = (dataframe_position_final.groupby(['A_site','B_site']).count()/len(dataframe_position_final)*100)['x']
     df3['nb_sample'] = (dataframe_position_final.groupby(['A_site','B_site']).count())['x']
     df3 = df3 [['Proba','nb_sample']]
-    
+    display(df3)
     if map_select == "de_inferno" : 
+        #for frame in range(7,11,1):
         df['push_apps_inferno'] = (df['x'] < 690) & (df['y'] >= 760)
         df['push_B_inferno'] = (df['x'] < 530) & (df['y'] > 400) & (df['y'] < 560)
         df['push_mid_inferno'] = (df['x'] < 650) & (df['y'] < 750) & (df['y'] > 600)
-        df = df.groupby('round_compteur').sum()
-        df4 = df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count()
-        df4['Proba'] = (df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count()/len(df)*100)['x']
-        df4['nb_sample'] = (df.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).count())['x']
+        df = df.groupby(['round_compteur','frame_number']).sum()
+        df4 = df.groupby(['frame_number','push_apps_inferno','push_B_inferno','push_mid_inferno']).count()
+        print(df3['nb_sample'].sum())
+        df4['Proba'] = (df.groupby(['frame_number','push_apps_inferno','push_B_inferno','push_mid_inferno']).count()/df3['nb_sample'].sum()*100)['x']
+        df4['nb_sample'] = (df.groupby(['frame_number','push_apps_inferno','push_B_inferno','push_mid_inferno']).count())['x']
         df4 = df4[['Proba','nb_sample']]
+        display(df4)
+        df4 = df4.groupby(['push_apps_inferno','push_B_inferno','push_mid_inferno']).max()
         display(df4)
         
         
