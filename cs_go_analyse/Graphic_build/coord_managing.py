@@ -48,7 +48,7 @@ def position_coordonate(dataframe_position_final,map,names,x,y,z,information = N
     return  dataframe_position_final.append(dataframe_position).reset_index(drop=True)
 
 
-def get_coord_dataframe_with_info(map_select,dic_list,x,y,z,dataframe_position_final, info = None):
+def get_coord_dataframe_with_info(map_select,dic_list,x,y,z,dataframe_position_final,clock,round_num, info = None):
     for element in dic_list:
         information = []
         X = element[x]
@@ -57,6 +57,8 @@ def get_coord_dataframe_with_info(map_select,dic_list,x,y,z,dataframe_position_f
         names = element["name"]
         for i in info:
             information.append(element[i])
-        information_str = ','.join(str(e) for e in information)
+        information.append(clock)
+        information.append(round_num)
+        information_str = ','.join(str(e) for e in information) 
         dataframe_position_final = position_coordonate(dataframe_position_final,map_select,names,X,Y,Z,information_str)
     return dataframe_position_final
