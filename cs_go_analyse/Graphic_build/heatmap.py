@@ -95,5 +95,40 @@ def plot_from_df(dataframe_position,carte):
         plt.show()
 
 
+def plot_from_simple_df(dataframe_position, carte):
+    plt.figure()
+    fig, ax = plt.subplots(figsize=(15, 15))
+    ax.set_title('Plot position')
+    ax.scatter(
+        [dataframe_position['x']],
+        [dataframe_position['y']],
+        alpha=1,
+        zorder=3,
+        cmap='hot'
+    )
+
+    map_bg = plt.imread("demo_csgo/map_adjustement/" + carte + ".png")
+    hb = ax.hexbin(x=[dataframe_position['x']], y=[dataframe_position['y']], gridsize=6, mincnt=0.01, alpha=0.5)
+    ax.imshow(map_bg, zorder=0)
+    texts = [
+        plt.text(dataframe_position['x'][i], dataframe_position['y'][i], str(dataframe_position['player'][i]) +','+ str(dataframe_position['clock'][i])
+                 +','+str(dataframe_position['weapon'][i]), fontsize=7,
+                 color="white") for i in range(len(dataframe_position))]
+    adjust_text(texts)
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=1)
+    cb = fig.colorbar(hb, ax=ax, cax=cax)
+    buf = BytesIO()
+    # plt.plot([690, 690], [760, 900], 'k-', lw=2)
+    # plt.plot([530, 530], [400, 560], 'k-', lw=2,color = "red")
+    # plt.plot([0, 530], [400, 400], 'k-', lw=2,color = "red")
+    # plt.plot([0, 530], [560, 560], 'k-', lw=2,color = "red")
+    # plt.plot([500, 800], [500, 540], 'k-', lw=2)
+
+    # df['push_mid_inferno'] = (df['x'] < 650) & (df['y'] < 750) & (df['y'] > 600)
+
+    ax.imshow(map_bg, zorder=0)
+
+    plt.show()
     
         

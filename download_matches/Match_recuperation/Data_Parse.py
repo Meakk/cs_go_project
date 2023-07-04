@@ -102,6 +102,7 @@ def match_recuperation_dict_txt(api_key="38b28095-4ca6-48b6-aec5-748f507d5fcf",
     print("En attente de FIN download and parse")
     print("succeed",succeed)
     for proc2 in proc :
+        print("proc:",proc2)
         proc2.join()
     #b = multiprocessing.Barrier(succeed)
     #b.wait()
@@ -135,18 +136,18 @@ def download_parse(url,match_details,all_match_player,nickname,i):
         try:
             demo_parser = DemoParser(demofile='demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + '.dem',
                                     demo_id=nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + "_" + match_name,
-                                    parse_rate=128, 
+                                    parse_rate=128,
                                     outpath = 'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/')
             data = demo_parser.parse()
             os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem')
             os.remove('demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + "_" + str(
             match_details["configured_at"]) + '.dem.7z')
-        except : 
+        except :
             
             demo_parser = DemoParser(demofile='demo_csgo/DataBase/' +match_name+ '.dem',
                                     demo_id=nickname + "_" + match_details["voting"]["map"]["pick"][0] + "_" + str(match_details["configured_at"]) + "_" + match_name,
-                                    parse_rate=128, 
+                                    parse_rate=128,
                                     outpath = 'demo_csgo/DataBase/' + match_details["voting"]["map"]["pick"][0] + '/')
             data = demo_parser.parse()
             os.remove('demo_csgo/DataBase/' + match_name+ '.dem')

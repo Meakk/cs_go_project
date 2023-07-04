@@ -547,3 +547,37 @@ def second_round(player_name, map_select,list_match, side = 't',frame = 7,buy_ty
     dataframe_grenade['Bombsite'] = len(dataframe_grenade)*[None]
     dataframe_grenade['Match_ID'] = len(dataframe_grenade)*[None]
     data_player = plot_map_list_of_game(dataframe_position_final, map_select,frame = frame,text = True, nb_games = len(list_match),premade = premade)
+
+
+def ct_kill_position(player_name, map_select, list_match,premade):
+    for joueur in premade:
+        dataframe_position_final = pd.DataFrame(columns=['player', 'clock', 'x', 'y', 'z', 'weapon'])
+        side = "ct"
+        frame = 7
+        for num_match in range(len(list_match)):
+
+            round = 0
+
+            for i in range(len(list_match[num_match]["gameRounds"][round]["frames"][frame][side]['players'])):
+                if list_match[num_match]["gameRounds"][0]["frames"][frame][side]['players'][i]["name"] == player_name:
+                    round = 0
+                    break
+                else:
+                    round = 15
+
+            for round_t in range(round, int(round * len(list_match[num_match]["gameRounds"]) / 15 + 15 - round)):
+                for killer in list_match[num_match]['gameRounds'][round_t]['kills']:
+                    if (killer['attackerSide'] == "CT") & (killer['attackerName'] in (joueur)):
+                        player_dict = {'player': killer['attackerName'], 'x': killer['attackerX'],
+                                       'y': killer['attackerY'], 'z': killer['attackerZ'], 'clock': killer['clockTime'],
+                                       'weapon': killer['weapon']}
+                        dataframe_position_final = pd.concat(
+                            [pd.DataFrame.from_dict(player_dict, orient='index').T, dataframe_position_final],
+                            axis=0).reset_index(drop=True)
+
+        dataframe_position_final['x'] = dataframe_position_final['x'].apply(
+            lambda x: pointx_to_resolutionx(x, map_select))
+        dataframe_position_final['y'] = dataframe_position_final['y'].apply(
+            lambda x: pointy_to_resolutiony(x, map_select))
+
+        plot_from_simple_df(dataframe_position_final, map_select)
