@@ -102,7 +102,7 @@ def gunround_analysis(player_name, map_select,list_match, side = 't',start_frame
         gif_frames.append(image) 
     imageio.mimsave(f'demo_csgo/img/{side}.gif', # output gif
             gif_frames,          # array of input frames
-            fps = 1)         # optional: frames per second
+            duration = 1000)         # optional: frames per second
     
 
         
@@ -161,7 +161,7 @@ def fav_bomb_site_analysis(player_name,list_match, map_select,side = 't',frame =
             distA = distance_point(bomb, bombsiteA,map_select)
             distB = distance_point(bomb, bombsiteB,map_select)
             bomb_list = {'x':pointx_to_resolutionx(bomb[0],map_select) , 'y':pointy_to_resolutiony(bomb[1],map_select), 'z': bomb[2],'side_A' : distA < distB}
-            bomb_dataframe = bomb_dataframe.append(bomb_list,ignore_index = True)
+            bomb_dataframe = pd.concat([bomb_dataframe, pd.DataFrame([bomb_list])], ignore_index=True)
             if distA <= distB:
                 if ((round != 15)|(round != 0)):
                     if buy_type == "Full Eco":

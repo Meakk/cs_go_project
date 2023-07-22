@@ -45,7 +45,8 @@ def position_coordonate(dataframe_position_final,map,names,x,y,z,information = N
     dataframe_position = pd.DataFrame([[x_correct,y_correct,z]],columns=['x','y','z'])
     if information != None:
         dataframe_position = pd.DataFrame([[x_correct, y_correct,z,information,names]], columns=['x', 'y','z','info',"name"])
-    return  dataframe_position_final.append(dataframe_position).reset_index(drop=True)
+    dataframe_position_final = pd.concat([dataframe_position_final, dataframe_position], ignore_index=True)
+    return dataframe_position_final.reset_index(drop=True)
 
 
 def get_coord_dataframe_with_info(map_select,dic_list,x,y,z,dataframe_position_final,clock,round_num, info = None):
