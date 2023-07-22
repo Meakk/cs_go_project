@@ -14,11 +14,11 @@ class FaceitData:
         """
 
         self.api_token = api_token
-        self.base_url = 'https://open.faceit.com/data/v4'
+        self.base_url = "https://open.faceit.com/data/v4"
 
         self.headers = {
-            'accept': 'application/json',
-            'Authorization': 'Bearer {}'.format(self.api_token)
+            "accept": "application/json",
+            "Authorization": "Bearer {}".format(self.api_token),
         }
 
     # Championships
@@ -35,20 +35,25 @@ class FaceitData:
             api_url = "{}/championships/{}".format(self.base_url, championship_id)
 
             if expanded is not None:
-                if expanded.lower() == 'game':
-                    api_url += '?expanded=game'
-                elif expanded.lower() == 'organizer':
-                    api_url += '?expanded=organizer'
+                if expanded.lower() == "game":
+                    api_url += "?expanded=game"
+                elif expanded.lower() == "organizer":
+                    api_url += "?expanded=organizer"
 
             res = requests.get(api_url, headers=self.headers)
 
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def championship_matches(self, championship_id=None, type_of_match="all", starting_item_position=0,
-                             return_items=20):
+    def championship_matches(
+        self,
+        championship_id=None,
+        type_of_match="all",
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Championship match details
         Keyword arguments:
         championship_id -- The championship ID
@@ -61,15 +66,22 @@ class FaceitData:
             print("The championship_id of championship_matches() cannot be nothing!")
         else:
             api_url = "{}/championships/{}/matches?type={}&offset={}&limit={}".format(
-                self.base_url, championship_id, type_of_match, starting_item_position, return_items)
+                self.base_url,
+                championship_id,
+                type_of_match,
+                starting_item_position,
+                return_items,
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def championship_subscriptions(self, championship_id=None, starting_item_position=0, return_items=10):
+    def championship_subscriptions(
+        self, championship_id=None, starting_item_position=0, return_items=10
+    ):
         """Retrieve all subscriptions of a championship
         Keyword arguments:
         championship_id -- The championship ID
@@ -78,14 +90,17 @@ class FaceitData:
         """
 
         if championship_id is None:
-            print("The championship_id of championship_subscriptions() cannot be nothing!")
+            print(
+                "The championship_id of championship_subscriptions() cannot be nothing!"
+            )
         else:
             api_url = "{}/championships/{}/subscriptions?offset={}&limit={}".format(
-                self.base_url, championship_id, starting_item_position, return_items)
+                self.base_url, championship_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -99,11 +114,12 @@ class FaceitData:
         """
 
         api_url = "{}/games?offset={}&limit={}".format(
-            self.base_url, starting_item_position, return_items)
+            self.base_url, starting_item_position, return_items
+        )
 
         res = requests.get(api_url, headers=self.headers)
         if res.status_code == 200:
-            return json.loads(res.content.decode('utf-8'))
+            return json.loads(res.content.decode("utf-8"))
         else:
             return None
 
@@ -120,7 +136,7 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -137,7 +153,7 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -165,11 +181,17 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def hub_matches(self, hub_id=None, type_of_match="all", starting_item_position=0, return_items=20):
+    def hub_matches(
+        self,
+        hub_id=None,
+        type_of_match="all",
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Retrieve all matches of a hub
         Keyword arguments:
         hub_id -- The ID of the hub (required)
@@ -182,11 +204,16 @@ class FaceitData:
             print("The hub_id of hub_matches() cannot be nothing!")
         else:
             api_url = "{}/hubs/{}/matches?type={}&offset={}&limit={}".format(
-                self.base_url, hub_id, type_of_match, starting_item_position, return_items)
+                self.base_url,
+                hub_id,
+                type_of_match,
+                starting_item_position,
+                return_items,
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -202,11 +229,12 @@ class FaceitData:
             print("The hub_id of hub_members() cannot be nothing!")
         else:
             api_url = "{}/hubs/{}/members?offset={}&limit={}".format(
-                self.base_url, hub_id, starting_item_position, return_items)
+                self.base_url, hub_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -222,11 +250,12 @@ class FaceitData:
             print("The hub_id of hub_roles() cannot be nothing!")
         else:
             api_url = "{}/hubs/{}/roles?offset={}&limit={}".format(
-                self.base_url, hub_id, starting_item_position, return_items)
+                self.base_url, hub_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -242,17 +271,20 @@ class FaceitData:
             print("The hub_id of hub_statistics() cannot be nothing!")
         else:
             api_url = "{}/hubs/{}/stats?offset={}&limit={}".format(
-                self.base_url, hub_id, starting_item_position, return_items)
+                self.base_url, hub_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
     # Leaderboards
 
-    def championship_leaderboards(self, championship_id=None, starting_item_position=0, return_items=20):
+    def championship_leaderboards(
+        self, championship_id=None, starting_item_position=0, return_items=20
+    ):
         """Retrieves all leaderboards of a championship
         Keyword arguments:
         championship_id -- The ID of a championship
@@ -264,15 +296,22 @@ class FaceitData:
             print("The championship ID cannot be nothing!")
         else:
             api_url = "{}/leaderboards/championships/{}?offset={}&limit={}".format(
-                self.base_url, championship_id, starting_item_position, return_items)
+                self.base_url, championship_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def championship_group_ranking(self, championship_id=None, group=None, starting_item_position=0, return_items=20):
+    def championship_group_ranking(
+        self,
+        championship_id=None,
+        group=None,
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Retrieve group ranking of a championship
         Keyword arguments:
         championship_id -- The ID of a championship
@@ -288,11 +327,16 @@ class FaceitData:
                 print("The group cannot be nothing!")
             else:
                 api_url = "{}/leaderboards/championships/{}/groups/{}?offset={}&limit={}".format(
-                    self.base_url, championship_id, group, starting_item_position, return_items)
+                    self.base_url,
+                    championship_id,
+                    group,
+                    starting_item_position,
+                    return_items,
+                )
 
                 res = requests.get(api_url, headers=self.headers)
                 if res.status_code == 200:
-                    return json.loads(res.content.decode('utf-8'))
+                    return json.loads(res.content.decode("utf-8"))
                 else:
                     return None
 
@@ -308,11 +352,12 @@ class FaceitData:
             print("The hub_id cannot be nothing!")
         else:
             api_url = "{}/leaderboards/hubs/{}?offset={}&limit={}".format(
-                self.base_url, hub_id, starting_item_position, return_items)
+                self.base_url, hub_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -328,15 +373,18 @@ class FaceitData:
             print("The hub_id cannot be nothing!")
         else:
             api_url = "{}/leaderboards/hubs/{}/general?offset={}&limit={}".format(
-                self.base_url, hub_id, starting_item_position, return_items)
+                self.base_url, hub_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def hub_season_ranking(self, hub_id=None, season=None, starting_item_position=0, return_items=20):
+    def hub_season_ranking(
+        self, hub_id=None, season=None, starting_item_position=0, return_items=20
+    ):
         """Retrieve seasonal ranking of a hub
         Keyword arguments:
         hub_id -- The ID of the hub
@@ -351,16 +399,25 @@ class FaceitData:
             if season == None:
                 print("The season cannot be nothing!")
             else:
-                api_url = "{}/leaderboards/hubs/{}/seasons/{}?offset={}&limit={}".format(
-                    self.base_url, hub_id, season, starting_item_position, return_items)
+                api_url = (
+                    "{}/leaderboards/hubs/{}/seasons/{}?offset={}&limit={}".format(
+                        self.base_url,
+                        hub_id,
+                        season,
+                        starting_item_position,
+                        return_items,
+                    )
+                )
 
                 res = requests.get(api_url, headers=self.headers)
                 if res.status_code == 200:
-                    return json.loads(res.content.decode('utf-8'))
+                    return json.loads(res.content.decode("utf-8"))
                 else:
                     return None
 
-    def leaderboard_ranking(self, leaderboard_id=None, starting_item_position=0, return_items=20):
+    def leaderboard_ranking(
+        self, leaderboard_id=None, starting_item_position=0, return_items=20
+    ):
         """Retrieve ranking from a leaderboard id
         Keyword arguments:
         leaderboard_id -- The ID of the leaderboard
@@ -372,11 +429,12 @@ class FaceitData:
             print("The leaderboard_id cannot be nothing!")
         else:
             api_url = "{}/leaderboards/{}?offset={}&limit={}".format(
-                self.base_url, leaderboard_id, starting_item_position, return_items)
+                self.base_url, leaderboard_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -395,7 +453,7 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -412,7 +470,7 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -428,7 +486,8 @@ class FaceitData:
         if name_of_organizer == None:
             if organizer_id == None:
                 print(
-                    "You cannot have the name_of_organizer or the organizer_id set to None! Please choose one!")
+                    "You cannot have the name_of_organizer or the organizer_id set to None! Please choose one!"
+                )
             else:
                 api_url = "{}/organizers"
 
@@ -439,11 +498,13 @@ class FaceitData:
                         api_url += "/{}".format(organizer_id)
                 res = requests.get(api_url, headers=self.headers)
                 if res.status_code == 200:
-                    return json.loads(res.content.decode('utf-8'))
+                    return json.loads(res.content.decode("utf-8"))
                 else:
                     return None
 
-    def organizer_championships(self, organizer_id=None, starting_item_position=0, return_items=20):
+    def organizer_championships(
+        self, organizer_id=None, starting_item_position=0, return_items=20
+    ):
         """Retrieve all championships of an organizer
         Keyword arguments:
         organizer_id -- The ID of the organizer
@@ -455,11 +516,12 @@ class FaceitData:
             print("You cannot have organizer_id set to nothing!")
         else:
             api_url = "{}/organizers/{}/championships?offset={}&limit={}".format(
-                self.base_url, organizer_id, starting_item_position, return_items)
+                self.base_url, organizer_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -472,16 +534,17 @@ class FaceitData:
         if organizer_id == None:
             print("You cannot have organizer_id set to nothing!")
         else:
-            api_url = "{}/organizers/{}/games".format(
-                self.base_url, organizer_id)
+            api_url = "{}/organizers/{}/games".format(self.base_url, organizer_id)
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def organizer_hubs(self, organizer_id=None, starting_item_position=0, return_items=20):
+    def organizer_hubs(
+        self, organizer_id=None, starting_item_position=0, return_items=20
+    ):
         """Retrieve all hubs of an organizer
         Keyword arguments:
         organizer_id -- The ID of the organizer
@@ -493,16 +556,22 @@ class FaceitData:
             print("You cannot have the organizer_id set to nothing!")
         else:
             api_url = "{}/organizers/{}/hubs?offset={}&limit={}".format(
-                self.base_url, organizer_id, starting_item_position, return_items)
+                self.base_url, organizer_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def organizer_tournaments(self, organizer_id=None, type_of_tournament="upcoming", starting_item_position=0,
-                              return_items=20):
+    def organizer_tournaments(
+        self,
+        organizer_id=None,
+        type_of_tournament="upcoming",
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Retrieve all tournaments of an organizer
         Keyword arguments:
         organizer_id -- The ID of the organizer
@@ -515,11 +584,16 @@ class FaceitData:
             print("You cannot have the organizer_id set to nothing!")
         else:
             api_url = "{}/organizers/{}/tournaments?type={}&offset={}&limit={}".format(
-                self.base_url, organizer_id, type_of_tournament, starting_item_position, return_items)
+                self.base_url,
+                organizer_id,
+                type_of_tournament,
+                starting_item_position,
+                return_items,
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -547,7 +621,7 @@ class FaceitData:
         # print(api_url)
         res = requests.get(api_url, headers=self.headers)
         if res.status_code == 200:
-            return json.loads(res.content.decode('utf-8'))
+            return json.loads(res.content.decode("utf-8"))
         else:
             return None
 
@@ -564,12 +638,19 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def player_matches(self, player_id=None, game=None, from_timestamp=None, to_timestamp=None,
-                       starting_item_position=0, return_items=20):
+    def player_matches(
+        self,
+        player_id=None,
+        game=None,
+        from_timestamp=None,
+        to_timestamp=None,
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Retrieve all matches of a player
         Keyword arguments:
         player_id -- The ID of a player
@@ -590,7 +671,8 @@ class FaceitData:
                 if from_timestamp == None:
                     if to_timestamp == None:
                         api_url += "?game={}&offset={}&limit={}".format(
-                            game, starting_item_position, return_items)
+                            game, starting_item_position, return_items
+                        )
                     else:
                         api_url += "?to={}".format(to_timestamp)
                 else:
@@ -598,7 +680,7 @@ class FaceitData:
 
                 res = requests.get(api_url, headers=self.headers)
                 if res.status_code == 200:
-                    return json.loads(res.content.decode('utf-8'))
+                    return json.loads(res.content.decode("utf-8"))
                 else:
                     return None
 
@@ -614,11 +696,12 @@ class FaceitData:
             print("The player_id cannot be nothing!")
         else:
             api_url = "{}/players/{}/hubs?offset={}&limit={}".format(
-                self.base_url, player_id, starting_item_position, return_items)
+                self.base_url, player_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -636,15 +719,18 @@ class FaceitData:
                 print("The game_id cannot be nothing!")
             else:
                 api_url = "{}/players/{}/stats/{}".format(
-                    self.base_url, player_id, game_id)
+                    self.base_url, player_id, game_id
+                )
 
                 res = requests.get(api_url, headers=self.headers)
                 if res.status_code == 200:
-                    return json.loads(res.content.decode('utf-8'))
+                    return json.loads(res.content.decode("utf-8"))
                 else:
                     return None
 
-    def player_tournaments(self, player_id=None, starting_item_position=0, return_items=20):
+    def player_tournaments(
+        self, player_id=None, starting_item_position=0, return_items=20
+    ):
         """Retrieve all hubs of a player
         Keyword arguments:
         player_id -- The ID of a player
@@ -656,17 +742,25 @@ class FaceitData:
             print("The player_id cannot be nothing!")
         else:
             api_url = "{}/players/{}/tournaments?offset={}&limit={}".format(
-                self.base_url, player_id, starting_item_position, return_items)
+                self.base_url, player_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
     # Rankings
 
-    def game_global_ranking(self, game_id=None, region=None, country=None, starting_item_position=0, return_items=20):
+    def game_global_ranking(
+        self,
+        game_id=None,
+        region=None,
+        country=None,
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Retrieve global ranking of a game
         Keyword arguments:
         game_id -- The ID of a game (Required)
@@ -683,21 +777,26 @@ class FaceitData:
                 print("The region cannot be nothing!")
             else:
                 api_url = "{}/rankings/games/{}/regions/{}".format(
-                    self.base_url, game_id, region)
+                    self.base_url, game_id, region
+                )
                 if country != None:
                     api_url += "?country={}&offset={}&limit={}".format(
-                        country, starting_item_position, return_items)
+                        country, starting_item_position, return_items
+                    )
                 else:
                     api_url += "?offset={}&limit={}".format(
-                        starting_item_position, return_items)
+                        starting_item_position, return_items
+                    )
 
                 res = requests.get(api_url, headers=self.headers)
                 if res.status_code == 200:
-                    return json.loads(res.content.decode('utf-8'))
+                    return json.loads(res.content.decode("utf-8"))
                 else:
                     return None
 
-    def player_ranking_of_game(self, game_id=None, region=None, player_id=None, country=None, return_items=20):
+    def player_ranking_of_game(
+        self, game_id=None, region=None, player_id=None, country=None, return_items=20
+    ):
         """Retrieve user position in the global ranking of a game
         Keyword arguments:
         game_id -- The ID of a game (required)
@@ -717,24 +816,31 @@ class FaceitData:
                     print("The player_id cannot be nothing!")
                 else:
                     api_url = "{}/rankings/games/{}/regions/{}/players/{}".format(
-                        self.base_url, game_id, region, player_id)
+                        self.base_url, game_id, region, player_id
+                    )
 
                     if country != None:
-                        api_url += "?country={}&limit={}".format(
-                            country, return_items)
+                        api_url += "?country={}&limit={}".format(country, return_items)
                     else:
                         api_url += "?limit={}".format(return_items)
 
                     res = requests.get(api_url, headers=self.headers)
                     if res.status_code == 200:
-                        return json.loads(res.content.decode('utf-8'))
+                        return json.loads(res.content.decode("utf-8"))
                     else:
                         return None
 
     # Search
 
-    def search_championships(self, name_of_championship=None, game=None, region=None, type_of_competition="all",
-                             starting_item_position=0, return_items=20):
+    def search_championships(
+        self,
+        name_of_championship=None,
+        game=None,
+        region=None,
+        type_of_competition="all",
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Search for championships
         Keyword arguments:
         name_of_championship -- The name of a championship on Faceit (required)
@@ -747,12 +853,15 @@ class FaceitData:
         if name_of_championship == None:
             print("The name of the championship cannot be nothing!")
         else:
-            api_url = "{}/search/championships?name={}&type={}&offset={}&limit={}".format(self.base_url,
-                                                                                          urllib.parse.quote_plus(
-                                                                                              name_of_championship),
-                                                                                          type_of_competition,
-                                                                                          starting_item_position,
-                                                                                          return_items)
+            api_url = (
+                "{}/search/championships?name={}&type={}&offset={}&limit={}".format(
+                    self.base_url,
+                    urllib.parse.quote_plus(name_of_championship),
+                    type_of_competition,
+                    starting_item_position,
+                    return_items,
+                )
+            )
 
             if game != None:
                 api_url += "&game={}".format(game)
@@ -761,11 +870,18 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def search_hubs(self, name_of_hub=None, game=None, region=None, starting_item_position=0, return_items=20):
+    def search_hubs(
+        self,
+        name_of_hub=None,
+        game=None,
+        region=None,
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Search for hubs
         Keyword arguments:
         name_of_hub -- The name of a hub on Faceit (required)
@@ -779,7 +895,11 @@ class FaceitData:
             print("The name_of_hub cannot be nothing!")
         else:
             api_url = "{}/search/hubs?name={}&offset={}&limit={}".format(
-                self.base_url, urllib.parse.quote_plus(name_of_hub), starting_item_position, return_items)
+                self.base_url,
+                urllib.parse.quote_plus(name_of_hub),
+                starting_item_position,
+                return_items,
+            )
 
             if game != None:
                 api_url += "&game={}".format(game)
@@ -788,11 +908,13 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def search_organizers(self, name_of_organizer=None, starting_item_position=0, return_items=20):
+    def search_organizers(
+        self, name_of_organizer=None, starting_item_position=0, return_items=20
+    ):
         """Search for organizers
         Keyword arguments:
         name_of_organizer -- The name of an organizer on Faceit
@@ -804,15 +926,26 @@ class FaceitData:
             print("The name of the organizer cannot be nothing!")
         else:
             api_url = "{}/search/organizers?name={}&offset={}&limit={}".format(
-                self.base_url, urllib.parse.quote_plus(name_of_organizer), starting_item_position, return_items)
+                self.base_url,
+                urllib.parse.quote_plus(name_of_organizer),
+                starting_item_position,
+                return_items,
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def search_players(self, nickname=None, game=None, country_code=None, starting_item_position=0, return_items=20):
+    def search_players(
+        self,
+        nickname=None,
+        game=None,
+        country_code=None,
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Search for players
         Keyword arguments:
         nickname -- The nickname of a player on Faceit (required)
@@ -826,7 +959,11 @@ class FaceitData:
             print("The nickname cannot be nothing!")
         else:
             api_url = "{}/search/players?nickname={}&offset={}&limit={}".format(
-                self.base_url, urllib.parse.quote_plus(nickname), starting_item_position, return_items)
+                self.base_url,
+                urllib.parse.quote_plus(nickname),
+                starting_item_position,
+                return_items,
+            )
 
             if game != None:
                 api_url += "&game={}".format(urllib.parse.quote_plus(game))
@@ -835,11 +972,13 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def search_teams(self, nickname=None, game=None, starting_item_position=0, return_items=20):
+    def search_teams(
+        self, nickname=None, game=None, starting_item_position=0, return_items=20
+    ):
         """Search for teams
         Keyword arguments:
         nickname -- The nickname of a team on Faceit (required)
@@ -852,19 +991,30 @@ class FaceitData:
             print("The nickname for search_teams() cannot be nothing!")
         else:
             api_url = "{}/search/teams?nickname={}&offset={}&limit={}".format(
-                self.base_url, urllib.parse.quote_plus(nickname), starting_item_position, return_items)
+                self.base_url,
+                urllib.parse.quote_plus(nickname),
+                starting_item_position,
+                return_items,
+            )
 
             if game != None:
                 api_url += "&game={}".format(urllib.parse.quote_plus(game))
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def search_tournaments(self, name_of_tournament=None, game=None, region=None, type_of_competition="all",
-                           starting_item_position=0, return_items=20):
+    def search_tournaments(
+        self,
+        name_of_tournament=None,
+        game=None,
+        region=None,
+        type_of_competition="all",
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Search for tournaments
         Keyword arguments:
         name_of_tournament -- The name of a tournament on Faceit (required)
@@ -878,12 +1028,13 @@ class FaceitData:
         if name_of_tournament == None:
             print("The name_of_tournament for search_tournaments() cannot be nothing!")
         else:
-            api_url = "{}/search/tournaments?name={}&type={}&offset={}&limit={}".format(self.base_url,
-                                                                                        urllib.parse.quote_plus(
-                                                                                            name_of_tournament),
-                                                                                        type_of_competition,
-                                                                                        starting_item_position,
-                                                                                        return_items)
+            api_url = "{}/search/tournaments?name={}&type={}&offset={}&limit={}".format(
+                self.base_url,
+                urllib.parse.quote_plus(name_of_tournament),
+                type_of_competition,
+                starting_item_position,
+                return_items,
+            )
 
             if game != None:
                 api_url += "&game={}".format(urllib.parse.quote_plus(game))
@@ -892,7 +1043,7 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -911,7 +1062,7 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -928,11 +1079,12 @@ class FaceitData:
             print("The game_id of team_stats() cannot be nothing")
         else:
             api_url = "{}/teams/{}/stats/{}".format(
-                self.base_url, team_id, urllib.parse.quote_plus(game_id))
+                self.base_url, team_id, urllib.parse.quote_plus(game_id)
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -948,18 +1100,25 @@ class FaceitData:
             print("The team_id of team_tournaments() cannot be nothing!")
         else:
             api_url = "{}/teams/{}/tournaments?offset={}&limit={}".format(
-                self.base_url, team_id, starting_item_position, return_items)
+                self.base_url, team_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
     # Tournaments
 
-    def all_tournaments(self, game=None, region=None, type_of_tournament="upcoming", starting_item_position=0,
-                        return_items=20):
+    def all_tournaments(
+        self,
+        game=None,
+        region=None,
+        type_of_tournament="upcoming",
+        starting_item_position=0,
+        return_items=20,
+    ):
         """Retrieve all tournaments
         Keyword arguments:
         game -- A game on Faceit
@@ -969,8 +1128,7 @@ class FaceitData:
         return_items -- The number of items to return (Default is 20)
         """
 
-        api_url = "{}/tournaments?type={}".format(
-            self.base_url, type_of_tournament)
+        api_url = "{}/tournaments?type={}".format(self.base_url, type_of_tournament)
 
         if game != None:
             api_url += "&game={}".format(urllib.parse.quote_plus(game))
@@ -979,7 +1137,7 @@ class FaceitData:
 
         res = requests.get(api_url, headers=self.headers)
         if res.status_code == 200:
-            return json.loads(res.content.decode('utf-8'))
+            return json.loads(res.content.decode("utf-8"))
         else:
             return None
 
@@ -1002,7 +1160,7 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
@@ -1020,11 +1178,13 @@ class FaceitData:
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def tournament_matches(self, tournament_id=None, starting_item_position=0, return_items=20):
+    def tournament_matches(
+        self, tournament_id=None, starting_item_position=0, return_items=20
+    ):
         """Retrieve all matches of a tournament
         Keyword arguments:
         tournament_id -- The ID of a tournament (required)
@@ -1035,16 +1195,19 @@ class FaceitData:
         if tournament_id == None:
             print("The tournament_id of tournament_matches() cannot be nothing!")
         else:
-            api_url = "{}/tournaments/{}/matches?offset={}&limit={}".format(self.base_url, tournament_id,
-                                                                            starting_item_position, return_items)
+            api_url = "{}/tournaments/{}/matches?offset={}&limit={}".format(
+                self.base_url, tournament_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
 
-    def tournament_teams(self, tournament_id=None, starting_item_position=0, return_items=20):
+    def tournament_teams(
+        self, tournament_id=None, starting_item_position=0, return_items=20
+    ):
         """Retrieve all teams of a tournament
         Keyword arguments:
         tournament_id -- The ID of a tournament (required)
@@ -1055,11 +1218,12 @@ class FaceitData:
         if tournament_id == None:
             print("The tournament_id of tournament_teams() cannot be nothing!")
         else:
-            api_url = "{}/tournaments/{}/teams?offset={}&limit={}".format(self.base_url, tournament_id,
-                                                                          starting_item_position, return_items)
+            api_url = "{}/tournaments/{}/teams?offset={}&limit={}".format(
+                self.base_url, tournament_id, starting_item_position, return_items
+            )
 
             res = requests.get(api_url, headers=self.headers)
             if res.status_code == 200:
-                return json.loads(res.content.decode('utf-8'))
+                return json.loads(res.content.decode("utf-8"))
             else:
                 return None
